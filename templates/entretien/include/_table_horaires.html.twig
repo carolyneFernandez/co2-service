@@ -1,0 +1,32 @@
+<div class="table-responsive">
+    <table class="table table-sm">
+        <thead>
+        <tr>
+            <th>Date de début</th>
+            <th>Date de fin</th>
+            {% if noDisplayTech is not defined %}
+                <th>Technicien</th>
+            {% endif %}
+            {% if is_granted(ROLE_ADMIN) and entretien.statut.id != STATUT_FACTURE %}
+                <th></th>
+            {% endif %}
+        </tr>
+        </thead>
+        <tbody>
+        {% for horaire in horaires %}
+            <tr>
+                <td>{{ horaire.dateDebut|date('d/m/Y \\d\\e H\\hi') }}</td>
+                <td>{{ horaire.dateFin ? horaire.dateFin|date('d/m/Y à H\\hi') }}</td>
+                {% if noDisplayTech is not defined %}
+                    <td>{{ horaire.technicien.nomPrenom }}</td>
+                {% endif %}
+                {% if is_granted(ROLE_ADMIN) and entretien.statut.id != STATUT_FACTURE %}
+                    <td class="align-middle">
+                        <a href="{{ url('entretien_horaire_edit', {id: horaire.id}) }}"><i class="fa fa-pen"></i></a>
+                    </td>
+                {% endif %}
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>

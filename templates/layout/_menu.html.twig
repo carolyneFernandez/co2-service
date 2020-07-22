@@ -1,0 +1,49 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary p-2 p-md-4">
+    <a class="navbar-brand" href="{{ url('index') }}"><img src="{{ asset('assets/img/logos/logo_texte_CO2Services.png') }}" alt="logo" class="logo-text"></a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarText">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item {{ app.request.attributes.get('_route') starts with 'index' ? 'active' }}">
+                <a class="nav-link" href="{{ url('index') }}">Tableau de bord <span class="sr-only">(current)</span></a>
+            </li>
+            <li class="nav-item {{ app.request.attributes.get('_route') starts with 'client_' or app.request.attributes.get('_route') starts with 'travaux_' or app.request.attributes.get('_route') starts with 'user_index' or app.request.attributes.get('_route') starts with 'entretien' ? 'active' }}">
+                <a class="nav-link" href="{{ path('client_index') }}">Clients</a>
+            </li>
+
+            <li class="nav-item {{ app.request.attributes.get('_route') starts with 'technicien_' ? 'active' }}">
+                <a class="nav-link" href="{{ url('technicien_index') }}">Techniciens</a>
+            </li>
+
+            <li class="nav-item dropdown {{ app.request.attributes.get('_route') starts with 'enseigne_' ? 'active' }}">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Réglages
+                </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                    <a class="dropdown-item {{ app.request.attributes.get('_route') starts with 'enseigne_' ? 'active' }}" href="{{ url('enseigne_index') }}">Enseignes</a>
+                    <a class="dropdown-item {{ app.request.attributes.get('_route') starts with 'niveau_technicien_' ? 'active' }}" href="{{ path('niveau_technicien_index') }}"> Niveaux de technicien</a>
+                    <a class="dropdown-item {{ app.request.attributes.get('_route') starts with 'ville_livraison_' ? 'active' }}" href="{{ url('ville_livraison_index') }}">Départements de livraison</a>
+                    <a class="dropdown-item {{ app.request.attributes.get('_route') starts with 'tarif_livraison_' ? 'active' }}" href="{{ url('tarif_livraison_index') }}">Tarifs de livraison</a>
+                    <a class="dropdown-item {{ app.request.attributes.get('_route') starts with 'parametre_' ? 'active' }}" href="{{ url('parametre_index') }}">Paramètres</a>
+                </div>
+            </li>
+        </ul>
+        <ul class="navbar-nav">
+            <li class="nav-item dropdown {{ app.request.attributes.get('_route') starts with 'user_profil' ? 'active' }}">
+                <a class="nav-link dropdown-toggle text-center d-flex align-items-center" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <span class="d-inline-block pr-1">
+                        {{ app.user.nomPrenom }}<br>
+                        Administrateur
+                    </span>
+                </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                    <a class="dropdown-item {{ app.request.attributes.get('_route') starts with 'user_profil' ? 'active' }}" href="{{ url('user_profil') }}">Mon compte</a>
+                    <a class="dropdown-item {{ app.request.attributes.get('_route') starts with 'documentation' ? 'active' }}" href="{{ url('documentation_admin') }}"><i class="far fa-life-ring"></i> Aide</a>
+                    <a class="dropdown-item text-danger {{ app.request.attributes.get('_route') starts with 'app_logout' ? 'active' }}" href="{{ url('app_logout') }}">Déconnexion</a>
+                </div>
+            </li>
+        </ul>
+
+    </div>
+</nav>

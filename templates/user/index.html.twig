@@ -1,0 +1,88 @@
+{% extends role == ROLE_CLIENT ? 'client/base_client.html.twig' : 'base.html.twig' %}
+
+{% block title %}
+    {% if role == ROLE_TECHNICIEN %}
+        Techniciens
+    {% elseif role == ROLE_CLIENT %}
+        Chargés d'affaires
+    {% endif %}
+{% endblock %}
+
+{% block body %}
+
+    <h2 class="text-center">
+        {% if role == ROLE_TECHNICIEN %}
+            Techniciens
+        {% elseif role == ROLE_CLIENT %}
+            Chargés d'affaires
+        {% endif %}
+    </h2>
+
+    {% if role == ROLE_TECHNICIEN %}
+        <a href="{{ path('user_new', {role: ROLE_TECHNICIEN}) }}" class="btn btn-outline-success pull-right mb-2">Nouveau technicien</a>
+    {% elseif role == ROLE_CLIENT %}
+        <a href="{{ path('user_new', {role: ROLE_CLIENT, client: client.id}) }}" class="btn btn-outline-success pull-right mb-2">Nouveau chargé d'affaires</a>
+    {% endif %}
+
+    <table class="table table-sm table-hover table-responsive-md">
+        <thead>
+        <tr>
+            {#            <th>Roles</th>#}
+            <th {% if users.isSorted('u.nom') %} class="sorted"{% endif %}>
+                {{ knp_pagination_sortable(users, 'Nom', 'u.nom') }}
+            </th>
+            <th {% if users.isSorted('u.prenom') %} class="sorted"{% endif %}>
+                {{ knp_pagination_sortable(users, 'Prénom', 'u.prenom') }}
+            </th>
+            <th {% if users.isSorted('u.emailPro') %} class="sorted"{% endif %}>
+                {{ knp_pagination_sortable(users, 'Email pro', 'u.emailPro') }}
+            </th>
+            <th class="text-center {% if users.isSorted('u.telephone') %} sorted{% endif %}">
+                {{ knp_pagination_sortable(users, 'Téléphone', 'u.telephone') }}
+            </th>
+
+
+            {% if role == ROLE_TECHNICIEN %}
+                <th>Niveau</th>
+            {% elseif role == ROLE_CLIENT %}
+                <th>Enseignes</th>
+            {% endif %}
+            <th class="text-center">Compte actif</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for user in users %}
+            {% if role == ROLE_TECHNICIEN %}
+            <tr class="row-href" data-href="{{ url('user_show', {id: user.id}) }}">
+            {% elseif role == ROLE_CLIENT %}
+                <tr class="row-href" data-href="{{ url('user_show', {id: user.id, client: user.client.id}) }}">
+            {% endif %}
+            <td>{{ user.nom }}</td>
+            <td>{{ user.prenom }}</td>
+            <td><a href="mailto:{{ user.emailPro }}">{{ user.emailPro }}</a></td>
+            <td class="text-center"><a href="tel:{{ user.telephone }}">{{ user.telephone }}</a></td>
+            {% if role == ROLE_TECHNICIEN %}
+                <td>{{ user.niveauTechnicien ? user.niveauTechnicien.libelle }}</td>
+            {% elseif role == ROLE_CLIENT %}
+                <td class="col-4">
+                    {% for enseigne in user.enseignes %}
+                        {{ enseigne.nom }}{{ loop.last == false ? ', ' }}
+                    {% endfor %}
+                </td>
+            {% endif %}
+            <td class="text-center">{{ user.isActive ? 'Oui' : 'Non' }}</td>
+            </tr>
+        {% else %}
+            <tr class="text-center">
+                <td colspan="100%">Aucun item trouvé</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    {{ knp_pagination_render(users) }}
+
+
+
+
+{% endblock %}

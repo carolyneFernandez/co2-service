@@ -1,0 +1,92 @@
+{% extends is_granted(ROLE_ADMIN) ? 'client/base_client.html.twig' : 'base.html.twig' %}
+
+{% block title %}Retour de bouteille{% endblock %}
+
+{% block body %}
+    <h2 class="text-center">Retour de bouteille</h2>
+
+    {% if is_granted(ROLE_ADMIN) %}
+        <a href="{{ path('rappel_bouteille_index_admin', {'client' : client.id}) }}" class="btn btn-secondary">Retour</a>
+    {% elseif is_granted(ROLE_TECHNICIEN) %}
+        <a href="{{ path('rappel_bouteille_index') }}" class="btn btn-secondary">Retour</a>
+    {% elseif is_granted(ROLE_CLIENT) and rappel_bouteille.isFacture %}
+        <a href="{{ path('factures_facture_rappel_bouteille_show', {'id': rappel_bouteille.factureRappelBouteilleLigne.facture.id }) }}" class="btn btn-secondary">Retour</a>
+    {% endif %}
+
+    {% if is_granted(ROLE_ADMIN) and rappel_bouteille.isFacture == false %}
+        <a href="{{ path('rappel_bouteille_edit_admin', {'client': client.id, 'id': rappel_bouteille.id}) }}"
+           class="btn btn-outline-warning pull-right mb-2">Modifier</a>
+    {% endif %}
+
+    <div class="col-12 col-md-8 col-lg-6 mx-auto mt-3 mb-3 d-flex {{ is_granted(ROLE_TECHNICIEN) ? 'flex-column-reverse' : 'flex-column' }}  flex-lg-row justify-content-between">
+
+        <table class="table table-sm">
+
+            <tbody>
+            <tr>
+                <th>N°</th>
+                <td>{{ rappel_bouteille.id }}</td>
+            </tr>
+            <tr>
+                <th>Date</th>
+                <td>{{ rappel_bouteille.date ? rappel_bouteille.date|date('d/m/Y') : '' }}</td>
+            </tr>
+            <tr>
+                <th>Lieu de récupération</th>
+                <td>{{ rappel_bouteille.lieuRecuperation }}</td>
+            </tr>
+            <tr>
+                <th>Type de fluide</th>
+                <td>{{ rappel_bouteille.typeFluide }}</td>
+            </tr>
+            <tr>
+                <th>Date de saisie</th>
+                <td> {{ rappel_bouteille.dateSaisie ? 'le ' ~ rappel_bouteille.dateSaisie|date('d/m/Y \\à H\\hi') }}</td>
+            </tr>
+            {% if rappel_bouteille.isFacture  and is_granted(ROLE_ADMIN) or is_granted(ROLE_CLIENT) %}
+                <tr>
+                    <th>Facture</th>
+                    <td>
+                        {% if is_granted(ROLE_ADMIN) %}
+                            <a href="{{ url('factures_facture_rappel_bouteille_show_admin', {id: rappel_bouteille.factureRappelBouteilleLigne.facture.id, client: client.id}) }}">Voir la facture</a>
+                        {% else %}
+                            <a href="{{ url('factures_facture_rappel_bouteille_show', {id: rappel_bouteille.factureRappelBouteilleLigne.facture.id}) }}">Voir la facture</a>
+                        {% endif %}
+                        <a data-toggle="tooltip" data-title="Imprimer la facture" class="ml-2" href="{{ url('factures_facture_rappel_bouteille_pdf', {id: rappel_bouteille.factureRappelBouteilleLigne.facture.id}) }}"><i class="fas fa-file-pdf mr-1"></i></a>
+                    </td>
+                </tr>
+            {% endif %}
+            </tbody>
+        </table>
+
+    </div>
+
+    {% if files is not empty %}
+        <div class="col-12 col-md-8 col-lg-6 mx-auto mb-3">
+            <h3 class="text-center mt-2">Fichiers</h3>
+            <div class="border col-12 pt-3">
+                {% if files is not empty %}
+                    <ul class="list-style-type-none">
+                        {% for file in files %}
+                            <li>
+                                {% if (file.extension|lower) in ['png', 'svg', 'jpeg', 'jpg', 'gif'] %}
+                                    <i class="fas fa-file-image mr-1"></i>
+                                {% elseif (file.extension|lower) in ['pdf'] %}
+                                    <i class="fas fa-file-pdf mr-1"></i>
+                                {% else %}
+                                    <i class="fas fa-file mr-1"></i>
+                                {% endif %}
+                                <a target="_blank" href="{{ absolute_url(asset(replaceVariableFolderClient(dossier_fichier_rappel_bouteille, rappel_bouteille.client.id, null) ~ rappel_bouteille.id ~ '/' ~ file.basename )) }}">{{ file.filename }}</a>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+
+            </div>
+        </div>
+
+    {% endif %}
+
+
+
+{% endblock %}

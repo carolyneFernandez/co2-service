@@ -1,0 +1,27 @@
+
+{#    {{ dump(service) }}#}
+<div class="col-12 d-flex p-0 flex-column flex-md-row item-collection" data-id="{{ fourniture.vars.value ? fourniture.vars.value.id }}" data-name="{{ fourniture.vars.name }}">
+
+    <div class="col-12 col-md-2">
+        {{ form_row(fourniture.quantite) }}
+    </div>
+    <div class="col-12 col-md-4">
+        {{ form_row(fourniture.fourniture) }}
+    </div>
+    <div class="col-12 col-md-2">
+        {{ form_row(fourniture.code) }}
+    </div>
+    <div class="col-12 col-md-3">
+        {{ form_row(fourniture.commentaire) }}
+    </div>
+    <div class="col-12 col-md-1 justify-content-center d-flex align-items-end">
+        <button class="btn btn-outline-danger btn-sm delete-collection mb-4" type="button"><i class="fas fa-minus"></i></button>
+    </div>
+    {#        <div class="clearfix"></div>#}
+    {#    <div class="col-sm-12 d-flex align-items-center justify-content-center ">#}
+    {#        <div class="col-sm-12 d-flex  justify-content-center">#}
+    {#        </div>#}
+    {#    </div>#}
+    {#    <hr class="w-50 mb-0">#}
+    {#        <hr>#}
+</div>

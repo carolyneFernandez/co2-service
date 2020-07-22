@@ -1,0 +1,299 @@
+{% import 'entretien_bon_intervention/include/_prototypes.html.twig' as formMacro %}
+
+{{ form_start(form) }}
+
+    {{ form_row(form.client) }}
+    {{ form_row(form.adresse) }}
+<div class="row flex-column flex-md-row p-0">
+    <div class="col-12 col-md-4 p-O">
+        {{ form_row(form.codePostal) }}
+    </div>
+    <div class="col-12 col-md-8 p-O">
+        {{ form_row(form.ville) }}
+    </div>
+</div>
+<div class="row flex-column flex-md-row  p-0">
+    <div class="col-12 col-md-6 p-O">
+        {{ form_row(form.date) }}
+    </div>
+    <div class="col-12 col-md-6 p-O">
+        {{ form_row(form.telephone) }}
+    </div>
+</div>
+{{ form_row(form.numeroContrat) }}
+    {{ form_row(form.operationsEffectuees) }}
+<div class="border rounded mb-2">
+    <h3 class="text-center my-2">Travaux effectués</h3>
+
+    <div class="row px-2 flex-column flex-md-row justify-content-center">
+        <div class="col-12 col-md-3 my-2 text-md-center">
+            Contrôle Technique <span class="p-1 border">CT</span>
+        </div>
+        <div class="col-12 col-md-3 my-2 text-md-center">
+            Salle des machines <span class="p-1 border">SM</span>
+        </div>
+        <div class="col-12 col-md-3 my-2 text-md-center">
+            Visite totale <span class="p-1 border">T</span>
+        </div>
+    </div>
+
+    <div class="d-flex flex-column flex-md-row mt-3">
+
+        <div>
+            <table class="table table-sm table-hover td-p-1">
+                <thead class="sticky-top bg-secondary">
+                <tr>
+                    <th></th>
+                    <th>CT</th>
+                    <th>SM</th>
+                    <th>T</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td class="align-middle">{{ form_label(form.TE_Verif_temp) }}</td>
+                    {% for child in form.TE_Verif_temp %}
+                        <td class="align-middle text-center">{{ form_widget(child, {'label_attr': {'class': 'checkbox-custom'}}) }}</td>
+                    {% endfor %}
+                </tr>
+                <tr>
+                    <td class="align-middle">{{ form_label(form.TE_Ctrl_charge_fluide) }}</td>
+                    {% for child in form.TE_Ctrl_charge_fluide %}
+                        <td class="align-middle text-center">{{ form_widget(child, {'label_attr': {'class': 'checkbox-custom'}}) }}</td>
+                    {% endfor %}
+                </tr>
+                <tr>
+                    <td class="align-middle">{{ form_label(form.TE_Verif_fonct_groupes) }}</td>
+                    {% for child in form.TE_Verif_fonct_groupes %}
+                        <td class="align-middle text-center">{{ form_widget(child, {'label_attr': {'class': 'checkbox-custom'}}) }}</td>
+                    {% endfor %}
+                </tr>
+                <tr>
+                    <td class="align-middle">{{ form_label(form.TE_Ctrl_niv_huile_comp) }}</td>
+                    {% for child in form.TE_Ctrl_niv_huile_comp %}
+                        <td class="align-middle text-center">{{ form_widget(child, {'label_attr': {'class': 'checkbox-custom'}}) }}</td>
+                    {% endfor %}
+                </tr>
+                <tr>
+                    <td class="align-middle">{{ form_label(form.TE_Verif_regl_pend_deri) }}</td>
+                    {% for child in form.TE_Verif_regl_pend_deri %}
+                        <td class="align-middle text-center">{{ form_widget(child, {'label_attr': {'class': 'checkbox-custom'}}) }}</td>
+                    {% endfor %}
+                </tr>
+                <tr>
+                    <td class="align-middle">{{ form_label(form.TE_Verif_electrique) }}</td>
+                    {% for child in form.TE_Verif_electrique %}
+                        <td class="align-middle text-center">{{ form_widget(child, {'label_attr': {'class': 'checkbox-custom'}}) }}</td>
+                    {% endfor %}
+                </tr>
+                <tr>
+                    <td class="align-middle">{{ form_label(form.TE_Nett_condens) }}</td>
+                    {% for child in form.TE_Nett_condens %}
+                        <td class="align-middle text-center">{{ form_widget(child, {'label_attr': {'class': 'checkbox-custom'}}) }}</td>
+                    {% endfor %}
+                </tr>
+                <tr>
+                    <td class="align-middle">{{ form_label(form.TE_Nett_moteurs_elec) }}</td>
+                    {% for child in form.TE_Nett_moteurs_elec %}
+                        <td class="align-middle text-center">{{ form_widget(child, {'label_attr': {'class': 'checkbox-custom'}}) }}</td>
+                    {% endfor %}
+                </tr>
+                <tr>
+                    <td class="align-middle">{{ form_label(form.TE_Ctrl_etanch_circ_frig) }}</td>
+                    {% for child in form.TE_Ctrl_etanch_circ_frig %}
+                        <td class="align-middle text-center">{{ form_widget(child, {'label_attr': {'class': 'checkbox-custom'}}) }}</td>
+                    {% endfor %}
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+
+        <div>
+            <table class="table table-sm table-hover td-p-1">
+                <thead class="sticky-top bg-secondary">
+                <tr>
+                    <th></th>
+                    <th>CT</th>
+                    <th>SM</th>
+                    <th>T</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td class="align-middle">{{ form_label(form.TE_Nett_bacs_condens) }}</td>
+                    {% for child in form.TE_Nett_bacs_condens %}
+                        <td class="align-middle text-center">{{ form_widget(child, {'label_attr': {'class': 'checkbox-custom'}}) }}</td>
+                    {% endfor %}
+                </tr>
+                <tr>
+                    <td class="align-middle">{{ form_label(form.TE_Nett_salle_machine) }}</td>
+                    {% for child in form.TE_Nett_salle_machine %}
+                        <td class="align-middle text-center">{{ form_widget(child, {'label_attr': {'class': 'checkbox-custom'}}) }}</td>
+                    {% endfor %}
+                </tr>
+                <tr>
+                    <td class="align-middle">{{ form_label(form.TE_Nett_evapo) }}</td>
+                    {% for child in form.TE_Nett_evapo %}
+                        <td class="align-middle text-center">{{ form_widget(child, {'label_attr': {'class': 'checkbox-custom'}}) }}</td>
+                    {% endfor %}
+                </tr>
+                <tr>
+                    <td class="align-middle">{{ form_label(form.TE_Ctrl_Nett_gaine_air) }}</td>
+                    {% for child in form.TE_Ctrl_Nett_gaine_air %}
+                        <td class="align-middle text-center">{{ form_widget(child, {'label_attr': {'class': 'checkbox-custom'}}) }}</td>
+                    {% endfor %}
+                </tr>
+                <tr>
+                    <td class="align-middle">{{ form_label(form.TE_Nett_evap_egout) }}</td>
+                    {% for child in form.TE_Nett_evap_egout %}
+                        <td class="align-middle text-center">{{ form_widget(child, {'label_attr': {'class': 'checkbox-custom'}}) }}</td>
+                    {% endfor %}
+                </tr>
+                <tr>
+                    <td class="align-middle">{{ form_label(form.TE_Ctrl_venti_cham) }}</td>
+                    {% for child in form.TE_Ctrl_venti_cham %}
+                        <td class="align-middle text-center">{{ form_widget(child, {'label_attr': {'class': 'checkbox-custom'}}) }}</td>
+                    {% endfor %}
+                </tr>
+                <tr>
+                    <td class="align-middle">{{ form_label(form.TE_Ctrl_Nett_ecoul_degiv) }}</td>
+                    {% for child in form.TE_Ctrl_Nett_ecoul_degiv %}
+                        <td class="align-middle text-center">{{ form_widget(child, {'label_attr': {'class': 'checkbox-custom'}}) }}</td>
+                    {% endfor %}
+                </tr>
+                <tr>
+                    <td class="align-middle">{{ form_label(form.TE_Ctrl_tension_courroies) }}</td>
+                    {% for child in form.TE_Ctrl_tension_courroies %}
+                        <td class="align-middle text-center">{{ form_widget(child, {'label_attr': {'class': 'checkbox-custom'}}) }}</td>
+                    {% endfor %}
+                </tr>
+                <tr>
+                    <td class="align-middle">{{ form_label(form.TE_Maj_cahier_fluide) }}</td>
+                    {% for child in form.TE_Maj_cahier_fluide %}
+                        <td class="align-middle text-center">{{ form_widget(child, {'label_attr': {'class': 'checkbox-custom'}}) }}</td>
+                    {% endfor %}
+                </tr>
+                </tbody>
+            </table>
+
+
+        </div>
+
+
+    </div>
+
+</div>
+<h4 class="text-center">{{ form_label(form.entretienBonInterventionFournitures) }}</h4>
+<div id="bonInterFournitures" data-prototype='{{ formMacro.printfourniture(form.entretienBonInterventionFournitures.vars.prototype)|e }}' data-widget-tags="<div class='item-fourniture'></div>" data-widget-conter="{{ form.entretienBonInterventionFournitures|length }}">
+    {% for fourniture in form.entretienBonInterventionFournitures %}
+        <div class="item-fourniture">
+            {{ formMacro.printfourniture(fourniture) }}
+        </div>
+    {% endfor %}
+</div>
+
+<section class="text-center mb-5">
+    <button type="button" class="btn btn-outline-success btn-sm add-another-collection-lien-widget add-fourniture-button" data-list-selector="#bonInterFournitures"><i class="fa fa-plus"></i></button>
+</section>
+
+
+{{ form_row(form.rapportTechnicien) }}
+    {{ form_row(form.observationClient) }}
+
+
+<div class="row flex-column flex-md-row mb-3">
+    <div class="col-12 col-md-6 mb-md-3">
+
+        {{ form_label(form.signatureClient) }}
+        <div class="border col-12 mb-2 text-center">
+            <img id="previewSignatureClient" src="{{ entretien_bon_intervention.signatureClient ? entretien_bon_intervention.signatureClient }}" alt=" " class="previewSignature">
+        </div>
+
+        <div class="text-center">
+            <button type="button" class="btn btn-outline-warning btn-sm" data-toggle="modal" data-target="#modalSignatureClient">
+                <i class="fa fa-pen"></i>
+            </button>
+        </div>
+        <div class="d-none">
+            {{ form_widget(form.signatureClient) }}
+        </div>
+        {{ form_row(form.nomSignataireClient) }}
+    </div>
+    <div class="col-12 col-md-6">
+        {{ form_label(form.signatureTechnicien) }}<br>
+        <div class="border col-12 mb-2 text-center">
+            <img id="previewSignatureTechnicien" src="{{ entretien_bon_intervention.signatureTechnicien ? entretien_bon_intervention.signatureTechnicien }}" alt=" " class="previewSignature">
+        </div>
+
+        <div class="text-center">
+            <button type="button" class="btn btn-outline-warning btn-sm" data-toggle="modal" data-target="#modalSignatureTechnicien">
+                <i class="fa fa-pen"></i>
+            </button>
+        </div>
+        <div class="d-none">
+            {{ form_widget(form.signatureTechnicien) }}
+        </div>
+    </div>
+</div>
+
+
+<!-- Modal -->
+<div class="modal fade" id="modalSignatureClient" tabindex="-1" role="dialog" aria-labelledby="modalSignatureClient" aria-hidden="true">
+    <div class="modal-dialog modal-xl  modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Signature client</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body d-flex flex-column align-items-center">
+                <div class="signature-pad">
+                    <div class="signature-pad--body" style="height: 50vh;">
+                        <canvas id="signatureClient" class="signature-pad--canvas w-100 h-100"></canvas>
+                    </div>
+                </div>
+                <button type="button" class="btn btn-outline-warning btn-sm clearButtonSignatureClient mt-2">&times;</button>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-primary" data-dismiss="modal">Fermer</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="modalSignatureTechnicien" tabindex="-1" role="dialog" aria-labelledby="modalSignatureTechnicien" aria-hidden="true">
+    <div class="modal-dialog modal-xl  modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Signature technicien</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body d-flex flex-column align-items-center">
+                <div class="signature-pad">
+                    <div class="signature-pad--body" style="height: 50vh;">
+                        <canvas id="signatureTechnicien" class="signature-pad--canvas w-100 h-100"></canvas>
+                    </div>
+                </div>
+                <button type="button" class="btn btn-outline-warning btn-sm clearButtonSignatureTechnicien mt-2">&times;</button>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-primary" data-dismiss="modal">Fermer</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="fixed-bottom-right">
+    <button class="btn btn-primary">{{ button_label|default('Enregistrer') }}</button>
+</div>
+<div class="d-none">
+    {{ form_rest(form) }}
+</div>
+
+{{ form_end(form) }}

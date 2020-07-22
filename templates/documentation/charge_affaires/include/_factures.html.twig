@@ -1,0 +1,50 @@
+<h3 id="doc_factures" class="mt-5">Factures</h3>
+
+<p class="pl-3">
+    Une fois les activités terminées, elles sont prêtes à être facturées par CO2Services.
+    Dans la liste des factures, vous avez la possibilité de filtrer les factures par N° de facture de CO2Services, par votre propre N° de facture, mais aussi par facture payée/impayées.<br>
+    Les factures sont triés par défaut par date de facturation décroissantes. Cliquez sur les entêtes de tableau pour trier sur d'autre colonne.<br>
+    L'icône &laquo; <i class="fas fa-file-pdf"></i> &raquo; vous permet de générer directement un PDF de la facture.<br>
+    Dans le détail d'une facture, vous avez également tout l'historique des paiements que CO2Services aura enregistré pour cette facture.<br>
+    CO2Services peut ajouter des lignes libres dans la facture tant que celle-ci n'est pas &laquo; payée &raquo;. <br>
+    Vous pouvez communiquer votre propre numéro de facture en interne à CO2Services afin qu'ils l'insèrent dans la facture. Vous pourrez alors la retrouver grâce à ce numéro dans les filtres, et il y figurera dans la facture.
+    Une fois la facture &laquo; payée &raquo;, plus aucune modification n'est possible.<br>
+    A chaque nouvelle facture créée par CO2Services, vous recevrez une notification par email avec le lien vers la nouvelle facture.
+</p>
+
+<h4 class="pl-3 mt-4" id="doc_factures__livraisons">Factures de livraisons</h4>
+<p class="pl-5">
+    <a target="_blank" href="{{ url('factures_facture_livraison_index') }}" class="text-underline"><i class="fas fa-link mr-1"></i>Liste des factures de livraisons</a>
+    <br>
+    Les livraisons sont facturées en fonction des départements traversés. Ce calcul se fait automatiquement à la création de la facture par CO2Services. Une seule facture peut regrouper plusieurs livraisons (CO2Services sélectionne les livraisons à facturer).<br>
+</p>
+
+<h4 class="pl-3 mt-4" id="doc_factures__depannages">Factures de dépannages</h4>
+<p class="pl-5">
+    <a target="_blank" href="{{ url('factures_facture_depannage_index') }}" class="text-underline"><i class="fas fa-link mr-1"></i>Liste des factures de dépannages</a>
+    <br>
+    Les dépannages sont facturés en fonction des heures passées par les techniciens sur le dépannage. Ces horaires sont visibles dans le <a href="#doc_depannages__show" class="text-underline">détail du dépannage</a>. Ce calcul se fait automatiquement à la création de la facture par CO2Services. Une seule facture peut regrouper plusieurs dépannages (CO2Services sélectionne les dépannages à facturer).<br>
+</p>
+
+<h4 class="pl-3 mt-4" id="doc_factures__entretiens">Factures d'entretiens</h4>
+<p class="pl-5">
+    <a target="_blank" href="{{ url('factures_facture_entretien_index') }}" class="text-underline"><i class="fas fa-link mr-1"></i>Liste des factures d'entretiens</a>
+    <br>
+    Les entretiens sont facturés en fonction des heures passées par les techniciens sur l'entretien. Ces horaires sont visibles dans le <a href="#doc_entretiens__show" class="text-underline">détail de l'entretien</a>. Ce calcul se fait automatiquement à la création de la facture par CO2Services. Une seule facture peut regrouper plusieurs entretiens (CO2Services sélectionne les entretiens à facturer).<br>
+</p>
+
+<h4 class="pl-3 mt-4" id="doc_factures__travaux">Factures de travaux</h4>
+<p class="pl-5">
+    <a target="_blank" href="{{ url('factures_facture_travaux_index') }}" class="text-underline"><i class="fas fa-link mr-1"></i>Liste des factures de travaux</a>
+    <br>
+    Les travaux sont facturés en fonction des heures passées par les techniciens sur le travaux. Ces horaires sont visibles dans le <a href="#doc_travaux__show" class="text-underline">détail du travaux</a>. Ce calcul se fait automatiquement à la création de la facture par CO2Services. Une seule facture comporte un seul travaux.<br>
+</p>
+
+<h4 class="pl-3 mt-4" id="doc_factures__retours_bouteilles">Factures retours bouteilles</h4>
+<p class="pl-5">
+    <a target="_blank" href="{{ url('factures_facture_rappel_bouteille_index') }}" class="text-underline"><i class="fas fa-link mr-1"></i>Liste des factures de retour bouteille</a>
+    <br>
+    Les retours bouteilles sont facturés avec un forfait. Peu importe le nombre de retour bouteille, la facture comportera le même montant initial. Celui du forfait défini par CO2Services.<br>
+</p>
+
+<hr>

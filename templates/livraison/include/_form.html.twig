@@ -1,0 +1,43 @@
+{{ form_start(form) }}
+{% if is_granted(ROLE_ADMIN) %}
+    {{ form_row(form.chargeAffaire) }}
+{% endif %}
+    {{ form_row(form.dateSouhaitee) }}
+{% if is_granted(ROLE_ADMIN) %}
+    {{ form_row(form.dateRetenue) }}
+{% endif %}
+    {{ form_row(form.materielTransporte) }}
+    {{ form_row(form.reference) }}
+{% if is_granted(ROLE_ADMIN) %}
+    {{ form_row(form.techniciens) }}
+{% endif %}
+    {{ form_row(form.commentaires) }}
+
+<div class="d-flex flex-sm-column flex-md-row my-3">
+
+    <div class="col-sm-12 col-md-6 pt-2 border mr-md-2 div-adresse">
+        <h3 class="text-center mb-2">Départ</h3>
+        {{ form_row(form.enseigneDepart) }}
+        {{ form_row(form.villeDepart) }}
+        {{ form_row(form.adresseDepart) }}
+    </div>
+
+    <div class="col-sm-12 col-md-6 pt-2 border ml-md-2 div-adresse">
+        <h3 class="text-center mb-2">Arrivée</h3>
+        {{ form_row(form.enseigneArrivee) }}
+        {{ form_row(form.villeArrivee) }}
+        {{ form_row(form.adresseArrivee) }}
+
+    </div>
+
+</div>
+
+{% if is_granted(ROLE_ADMIN) %}
+    {{ form_row(form.dateReleve) }}
+    {{ form_row(form.dateLivraison) }}
+{% endif %}
+
+<div class="text-center">
+    <button class="btn btn-primary">{{ button_label|default('Créer') }}</button>
+</div>
+{{ form_end(form) }}

@@ -1,0 +1,252 @@
+{% extends is_granted(ROLE_ADMIN) ? 'client/base_client.html.twig' : 'base.html.twig' %}
+
+{% block title %}Livraison{% endblock %}
+
+{% block metaSocial %}
+    {% if livraison %}
+        {% if livraison.dateRetenue %}
+            {% set titre = 'Demande de livraison n°' ~ livraison.id ~ ' du ' ~ livraison.dateRetenue|date('d/m/Y \\à H\\hi') %}
+        {% else %}
+            {% set titre = 'Demande de livraison n°' ~ livraison.id ~ ' du ' ~ livraison.dateSouhaitee|date('d/m/Y \\à H\\hi') %}
+        {% endif %}
+        {% include 'layout/_meta_social.html.twig' with {title: titre, description: titre } %}
+    {% else %}
+        {{ parent() }}
+    {% endif %}
+{% endblock %}
+
+{% block body %}
+    <h2 class="text-center">Livraison</h2>
+
+    {% if is_granted(ROLE_ADMIN) %}
+        <a href="{{ path('livraison_index_admin', {'client' : client.id}) }}" class="btn btn-secondary">Retour</a>
+    {% else %}
+        <a href="{{ path('livraison_index') }}" class="btn btn-secondary">Retour</a>
+    {% endif %}
+
+    {% if is_granted(ROLE_ADMIN) and livraison.statut.id in [STATUT_EN_ATTENTE, STATUT_VALIDE, STATUT_EN_COURS] %}
+        <a href="{{ path('livraison_edit_admin', {'client': client.id, 'id': livraison.id}) }}"
+           class="btn btn-outline-warning pull-right mb-2">Modifier</a>
+    {% elseif is_granted(ROLE_CLIENT) and livraison.statut.id in [STATUT_EN_ATTENTE, STATUT_VALIDE] %}
+        <a href="{{ path('livraison_edit', {'id': livraison.id}) }}" class="btn btn-outline-warning pull-right mb-2">Modifier</a>
+    {% endif %}
+
+    {#    <div class="col-sm-12 col-md-10 col-lg-7 mx-auto">#}
+    <div class="col-12 col-md-10 col-lg-12 col-xl-11 mx-auto mt-3 mb-3 d-flex {{ is_granted(ROLE_TECHNICIEN) ? 'flex-column-reverse' : 'flex-column' }}  flex-lg-row justify-content-between">
+        <div class="col-12 {{ formHoraire is defined or files is not empty or formUploadFile is defined ? 'col-lg-8' }} ">
+
+            <table class="table table-sm">
+                <tbody>
+                <tr>
+                    <th>N°</th>
+                    <td>{{ livraison.id }}</td>
+                </tr>
+                <tr>
+                    <th>Statut</th>
+                    <td>{{ livraison.statut.libelle|capitalize }}{{ livraison.statut.id in [STATUT_VALIDE, STATUT_TERMINE, STATUT_FACTURE, STATUT_PAYE] ? 'e' }}</td>
+                </tr>
+                {% if is_granted(ROLE_ADMIN) or is_granted(ROLE_TECHNICIEN) %}
+                    <tr>
+                        <th>Chargé d'affaires</th>
+                        <td>
+                            {% if is_granted(ROLE_ADMIN) %}
+                                <a target="_blank" href="{{ url('user_show', {id: livraison.chargeAffaire.id, client: livraison.chargeAffaire.client.id}) }}">{{ livraison.chargeAffaire.nomPrenom }}</a>
+                            {% else %}
+                                {{ livraison.chargeAffaire.nomPrenom }}
+                            {% endif %}
+                        </td>
+                    </tr>
+
+                {% endif %}
+                <tr>
+                    <th>Date Souhaitee</th>
+                    <td>{{ livraison.dateSouhaitee ? livraison.dateSouhaitee|date('d/m/Y à H\\hi') : '' }}</td>
+                </tr>
+                <tr>
+                    <th>Date Retenue</th>
+                    <td>{{ livraison.dateRetenue ? livraison.dateRetenue|date('d/m/Y à H\\hi') : '' }}</td>
+                </tr>
+                <tr>
+                    <th>Materiel Transporte</th>
+                    <td>{{ livraison.materielTransporte }}</td>
+                </tr>
+                <tr>
+                    <th>Reference</th>
+                    <td>{{ livraison.reference }}</td>
+                </tr>
+                <tr>
+                    <th>Date Saisie</th>
+                    <td>{{ livraison.dateSaisie ? livraison.dateSaisie|date('d/m/Y à H\\hi') : '' }}</td>
+                </tr>
+                <tr>
+                    <th>Date relève</th>
+                    <td>{{ livraison.dateReleve ? livraison.dateReleve|date('d/m/Y à H\\hi') : '' }}</td>
+                </tr>
+                <tr>
+                    <th>Date livraison</th>
+                    <td>{{ livraison.dateLivraison ? livraison.dateLivraison|date('d/m/Y à H\\hi') : '' }}</td>
+                </tr>
+                <tr>
+                    <th>Techniciens</th>
+                    <td>
+                        {% for technicien in livraison.techniciens %}
+                            {% if is_granted(ROLE_ADMIN) %}
+                                <a href="{{ url('user_show', {id: technicien.id}) }}">
+                                    {{ technicien.nom ~ ' ' ~ technicien.prenom }}
+                                </a>
+                            {% else %}
+                                {{ technicien.nom ~ ' ' ~ technicien.prenom }}
+                            {% endif %}
+                            {{ loop.last == false ? '<br>' }}
+                        {% endfor %}
+                    </td>
+                </tr>
+                {% if livraison.factureLivraisonLigne and (is_granted(ROLE_ADMIN) or is_granted(ROLE_CLIENT)) %}
+                    <tr>
+                        <th>Facture</th>
+                        <td>
+                            {% if is_granted(ROLE_ADMIN) %}
+                                <a href="{{ url('factures_facture_livraison_show_admin', {id: livraison.factureLivraisonLigne.facture.id, client: client.id}) }}">Voir la facture</a>
+                            {% else %}
+                                <a href="{{ url('factures_facture_livraison_show', {id: livraison.factureLivraisonLigne.facture.id}) }}">Voir la facture</a>
+                            {% endif %}
+                            <a data-toggle="tooltip" data-title="Imprimer la facture" class="ml-2" href="{{ url('factures_facture_livraison_pdf', {id: livraison.factureLivraisonLigne.facture.id}) }}"><i class="fas fa-file-pdf mr-1"></i></a>
+
+                        </td>
+                    </tr>
+                {% endif %}
+                <tr>
+                    <th>Commentaires</th>
+                    <td>{{ livraison.commentaires|nl2br }}</td>
+                </tr>
+
+                </tbody>
+            </table>
+
+            <div class="d-flex flex-column flex-md-row my-3 align-items-stretch">
+
+                <div class="col-12 col-md-6 mb-3 mb-md-0 px-0">
+                    <div class="border mr-md-2 pt-2 mr-0 h-100">
+                        <h3 class="text-center mb-2">Départ</h3>
+                        <div class="table-responsive">
+
+                            <table class="table table-sm">
+                                <tbody>
+                                <tr>
+                                    <th>Enseigne de départ</th>
+                                    <td>{{ livraison.enseigneDepart.nom }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Département de départ</th>
+                                    <td>{{ livraison.villeDepart.nom }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Adresse de départ</th>
+                                    <td>{{ livraison.adresseDepart|nl2br }}</td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-sm-12 col-md-6 px-0">
+                    <div class="border ml-md-2 pt-2 mr-0 h-100">
+                        <h3 class="text-center mb-2">Arrivée</h3>
+                        <div class="table-responsive">
+                            <table class="table table-sm">
+                                <tbody>
+                                <tr>
+                                    <th>Enseigne d'arrivée</th>
+                                    <td>{{ livraison.enseigneArrivee.nom }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Département d'arrivée</th>
+                                    <td>{{ livraison.villeArrivee.nom }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Adresse d'arrivée</th>
+                                    <td>{{ livraison.adresseArrivee|nl2br }}</td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="col-12 col-lg-4 mb-3 d-flex flex-column">
+
+
+            {% if (is_granted(ROLE_TECHNICIEN) or is_granted(ROLE_ADMIN)) and formHoraire is defined %}
+                <div class="mb-3">
+
+                    {% if formHoraire.vars.value.dateReleve != null %}
+                        <h3 class="text-center mt-2">Date de livraison</h3>
+                    {% else %}
+                        <h3 class="text-center mt-2">Date de la relève</h3>
+                    {% endif %}
+                    <div class="border col-12 pt-3">
+                        {% if formHoraire.vars.value.dateReleve != null %}
+                            <div>
+                                Date de la relève : {{ formHoraire.vars.value.dateReleve|date('d/m/Y à H\\hi') }}
+                            </div>
+                        {% endif %}
+                        {#                {% if formHoraire.vars.value.dateReleve != null %}#}
+                        {{ form_start(formHoraire) }}
+                        {{ form_widget(formHoraire) }}
+                        {{ form_end(formHoraire) }}
+                    </div>
+                </div>
+            {% endif %}
+
+            {% if files is not empty or is_granted(ROLE_TECHNICIEN) or is_granted(ROLE_ADMIN) %}
+
+                <div class="mb-3">
+                    <h3 class="text-center mt-2">Fichiers</h3>
+                    <div class="border col-12 pt-3">
+                        {% if files is not empty %}
+                            <ul class="list-style-type-none">
+                                {% for file in files %}
+                                    <li class="d-flex justify-content-between align-items-center">
+                                         <span>
+                                        {% if (file.extension|lower) in ['png', 'svg', 'jpeg', 'jpg', 'gif'] %}
+                                            <i class="fas fa-file-image mr-1"></i>
+                                        {% elseif (file.extension|lower) in ['pdf'] %}
+                                            <i class="fas fa-file-pdf mr-1"></i>
+                                        {% else %}
+                                            <i class="fas fa-file mr-1"></i>
+                                        {% endif %}
+
+                                        <a target="_blank" href="{{ absolute_url(asset(replaceVariableFolderClient(dossier_fichier_livraisons, livraison.chargeAffaire.client.id, livraison.chargeAffaire.id) ~ livraison.id ~ '/' ~ file.basename )) }}">{{ file.filename }}</a>
+                                        </span>
+                                        <span class="white-space-nowrap">
+                                            {% if (is_granted(ROLE_ADMIN) and livraison.statut.id not in [STATUT_FACTURE]) or (is_granted(ROLE_TECHNICIEN) and livraison.statut.id not in [STATUT_FACTURE]) %}
+                                                <a href="{{ url('livraison_admin_delete_file', {id: livraison.id, client: client.id, file: file.basename}) }}"><i class="fas fa-trash mr-1"></i></a>
+                                            {% endif %}
+                                        </span>
+
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        {% endif %}
+
+                        {% if (is_granted(ROLE_TECHNICIEN) or is_granted(ROLE_ADMIN)) and formUploadFile is defined %}
+                            {{ form_start(formUploadFile) }}
+                            {{ form_widget(formUploadFile) }}
+                            <div class="text-center form-group">
+                                <button type="submit" class="btn btn-primary">Envoyer</button>
+                            </div>
+                            {{ form_end(formUploadFile) }}
+                        {% endif %}
+                    </div>
+                </div>
+
+            {% endif %}
+        </div>
+
+
+    </div>
+{% endblock %}

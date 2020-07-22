@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}CO2 Services{% endblock %}</title>
+    <link rel="icon" href="{{ asset('assets/img/logos/logo_CO2Services.svg') }}">
+    {{ encore_entry_link_tags('css/app') }}
+    {% block stylesheets %}{% endblock %}
+    {% block metaSocial %}
+        {% include 'layout/_meta_social.html.twig' %}
+    {% endblock %}
+</head>
+<body class="min-vh-100 pb-5">
+
+{% if app.user %}
+
+    {% if ROLE_ADMIN in app.user.roles %}
+        {% include 'layout/_menu.html.twig' %}
+    {% elseif ROLE_TECHNICIEN in app.user.roles %}
+        {% include 'layout/_menu_technicien.html.twig' %}
+    {% elseif ROLE_CLIENT in app.user.roles %}
+        {% include 'layout/_menu_charge_affaire.html.twig' %}
+    {% endif %}
+
+{% endif %}
+
+{% block message %}
+    <div class="div-alerts">
+        {% for type, messages in app.session.flashBag.all %}
+            {% for message in messages %}
+                <section class="d-flex justify-content-end">
+                    <div class="alert alert-{{ type }} alert-dismissible fade show">
+                        <span class="mr-3">{{ message | raw }}</span>
+                        <button type="button" class="white close " data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                </section>
+            {% endfor %}
+        {% endfor %}
+    </div>
+{% endblock %}
+
+{% block subNav %}
+
+    <div class="container mt-3 pb-5">
+        {% block body %}{% endblock %}
+    </div>
+
+{% endblock %}
+
+<footer class="text-right mx-4 mt-4 mb-2">
+    {% block footer %}
+        <p>
+            {% if app.user %}
+                <a href="{{ is_granted(ROLE_ADMIN) ? url('documentation_admin') : is_granted(ROLE_TECHNICIEN) ? url('documentation_technicien') : is_granted(ROLE_CLIENT) ? url('documentation_charge_affaires') }}" data-toggle="tooltip" title="Documentation"><i class="far fa-life-ring"></i></a>
+            {% endif %}
+            {#        &#9400;CO2Service 2020#}
+        </p>
+    {% endblock %}
+</footer>
+
+{{ encore_entry_script_tags('js/app') }}
+{% block javascripts %}{% endblock %}
+</body>
+</html>

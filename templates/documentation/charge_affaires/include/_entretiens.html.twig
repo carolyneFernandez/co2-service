@@ -1,0 +1,69 @@
+<h3 id="doc_entretiens" class="mt-5">Entretiens</h3>
+
+<p class="pl-3">
+    <a target="_blank" href="{{ url('entretien_index') }}" class="text-underline"><i class="fas fa-link mr-1"></i>Liste des entretiens</a>
+    <br>
+    En tant que chargé d'affaires, vous pouvez faire des demandes d'entretien. Ces demandes seront traitées par CO2Services.
+</p>
+
+<h4 class="pl-3 mt-4" id="doc_entretiens__new">Nouvel entretien</h4>
+<p class="pl-5">
+    Dans la <a class="text-underline" target="_blank" href="{{ url('entretien_index') }}">liste des entretiens</a>, cliquez sur
+    <button type="button" class="btn btn-sm btn-outline-success">Nouvelle demande d'entretien</button>
+    .<br>
+    Vous arriverez alors sur le formulaire de demande d'entretien.<br>
+    <br>
+    Renseignez les dates de début et de fin de l'entretien (la date de fin est à titre indicatif mais obligatoire). Le champ &laquo; Numéro de contrat &raquo; représente le contrat d'entretien du client.<br>
+    Renseignez également l'enseigne où aura lieu l'entretien ainsi que le type d'entretien et l'adresse complète.<br>
+    <br>
+    Une fois votre saisie terminée, cliquez sur
+    <button type="button" class="btn btn-primary btn-sm">Enregistrer</button>
+    .<br>
+    CO2Services recevra une notification de demande d'entretien par email.<br>
+    <br>
+    Statut de l'entretien à ce stade : En attente
+</p>
+
+<h4 class="pl-3 mt-4" id="doc_entretiens__list">Liste des entretiens</h4>
+<p class="pl-5">
+    Dans la <a class="text-underline" target="_blank" href="{{ url('entretien_index') }}">liste des entretiens</a>, la liste est triée par date décroissante (les plus anciens en derniers).<br>Vous avez également un visuel sous forme de calendrier.<br>
+    Cliquez sur les entêtes de tableau pour trier sur d'autre colonne.<br>
+    Vous pouvez filtrer cette liste en cliquant sur le bouton
+    <button class="btn btn-sm btn-outline-primary" type="button">Filtres</button>
+    .<br>
+    Dans la pagination, vous pouvez choisir le nombre d'entretiens que vous souhaitez afficher par page.
+</p>
+
+<h4 class="pl-3 mt-4" id="doc_entretiens__show">Détails de l'entretien</h4>
+<p class="pl-5">
+    Dans la <a class="text-underline" target="_blank" href="{{ url('entretien_index') }}">liste des entretiens</a>, cliquez sur l'entretien dont vous voulez voir le détails.<br>
+    Vous avez alors un récapitulatif de l'entretien (date, adresses, numéro contrat d'entretien, statut de l'entretien).<br>
+    Vous avez également accès en lecture aux fichiers qui ont été importés par CO2Services lors de l'entretien. Vous pourrez également imprimer les PDF des bons et les fiches d'entretiens remplis par les techniciens.<br>
+    Vous aurez aussi un visuel sur les horaires saisit par les techniciens.
+</p>
+
+<h4 class="pl-3 mt-4" id="doc_entretiens__edit">Modifier l'entretien</h4>
+<p class="pl-5">
+    Vous pouvez modifier un entretien uniquement si le statut de l'entretien est "En attente, Validée, ou En cours". Cela vous permettra de corriger des informations si nécessaire.<br>
+    Dans le <a href="#doc_entretiens__show" class="text-underline">détails de l'entretien</a>, cliquez sur
+    <button type="button" class="btn btn-sm btn-outline-warning">Modifier</button>
+    .<br>
+    Changez les informations que vous souhaitez puis cliquez sur
+    <button type="button" class="btn btn-sm btn-primary">Enregistrer</button>
+    .<br>
+    Une fois l'entretien terminé, vous ne pourrez plus effectuer de modification.
+</p>
+
+<h4 class="pl-3 mt-4" id="doc_entretiens__cancel">Annuler l'entretien</h4>
+<p class="pl-5">
+    Vous pouvez annuler un entretien tant que ce dernier n'a pas encore commencé.<br>
+    Dans le <a href="#doc_entretiens__show" class="text-underline">détails de l'entretien</a>, cliquez sur
+    <button type="button" class="btn btn-sm btn-outline-warning">Modifier</button>
+    .<br>
+    Puis cliquez sur
+    <button type="button" class="btn btn-sm btn-danger">Annuler</button>
+    . Vous serez amenés à remplir le motif d'annulation de l'entretien.<br>
+    Une fois annulé, l'entretien ne s'effacera pas, il sera en statut &laquo; Annulé &raquo;.
+</p>
+
+<hr>

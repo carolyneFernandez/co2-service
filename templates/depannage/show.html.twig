@@ -1,0 +1,272 @@
+{% extends is_granted(ROLE_ADMIN) ? 'client/base_client.html.twig' : 'base.html.twig' %}
+
+{% block title %}Depannage{% endblock %}
+
+{% block metaSocial %}
+    {% if depannage %}
+        {% if depannage.dateRetenue %}
+            {% set titre = 'Demande de depannage n°' ~ depannage.id ~ ' du ' ~ depannage.dateRetenue|date('d/m/Y \\à H\\hi') %}
+        {% else %}
+            {% set titre = 'Demande de depannage n°' ~ depannage.id ~ ' du ' ~ depannage.dateSouhaitee|date('d/m/Y \\à H\\hi') %}
+        {% endif %}
+        {% include 'layout/_meta_social.html.twig' with {title: titre, description: titre } %}
+    {% else %}
+        {{ parent() }}
+    {% endif %}
+{% endblock %}
+
+{% block body %}
+    <h2 class="text-center">Demande de dépannage</h2>
+
+    {% if is_granted(ROLE_ADMIN) %}
+        <a href="{{ url('depannage_index_admin', {client: client.id}) }}" class="btn btn-secondary">Retour</a>
+        {% if is_granted(ROLE_ADMIN) and depannage.statut.id in [STATUT_EN_ATTENTE, STATUT_VALIDE, STATUT_EN_COURS] %}
+            <a href="{{ url('depannage_edit_admin', {'id': depannage.id, client: client.id}) }}" class="btn btn-outline-warning pull-right mb-2">Modifier</a>
+        {% endif %}
+    {% else %}
+        <a href="{{ url('depannage_index') }}" class="btn btn-secondary">Retour</a>
+        {% if is_granted(ROLE_CLIENT) and depannage.statut.id in [STATUT_EN_ATTENTE, STATUT_VALIDE, STATUT_EN_COURS] %}
+            <a href="{{ url('depannage_edit', {'id': depannage.id}) }}" class="btn btn-outline-warning pull-right mb-2">Modifier</a>
+        {% endif %}
+    {% endif %}
+
+    <div class="col-sm-12 col-md-10 mx-auto mt-3 d-flex {{ is_granted(ROLE_TECHNICIEN) ? 'flex-column-reverse' : 'flex-column' }}  flex-lg-row justify-content-between">
+        <div class="col-12 {{ horaires is not empty or formHoraire is defined or is_granted(ROLE_ADMIN) or files is not empty ? 'col-lg-6' }}">
+            <table class="table table-sm">
+                <tbody>
+                <tr>
+                    <th>N°</th>
+                    <td>{{ depannage.id }}</td>
+                </tr>
+                {% if is_granted(ROLE_ADMIN) %}
+                    <tr>
+                        <th>Chargé d'affaire</th>
+                        <td>
+                            <a href="{{ url('user_show', {client: client.id, id: depannage.chargeAffaire.id}) }}">
+                                {{ depannage.chargeAffaire.nom ~ ' ' ~ depannage.chargeAffaire.prenom }}</a>
+                        </td>
+                    </tr>
+                {% endif %}
+                <tr>
+                    <th>Statut</th>
+                    <td>{{ depannage.statut.libelle|capitalize }}</td>
+                </tr>
+                <tr>
+                    <th>Enseigne</th>
+                    <td>{{ depannage.enseigne ? depannage.enseigne.nom }}</td>
+                </tr>
+                <tr>
+                    <th>Ville</th>
+                    <td>{{ depannage.codePostal ~ (depannage.codePostal ? ' ': '') ~ depannage.ville }}</td>
+                </tr>
+                <tr>
+                    <th>Adresse</th>
+                    <td>{{ depannage.adresse|nl2br }}</td>
+                </tr>
+                <tr>
+                    <th>Type d'intervention</th>
+                    <td>{{ depannage.typeIntervention }}</td>
+                </tr>
+                <tr>
+                    <th>Reference</th>
+                    <td>{{ depannage.reference }}</td>
+                </tr>
+                <tr>
+                    <th>Date souhaitée</th>
+                    <td>{{ depannage.dateSouhaitee|date('d/m/Y') }}</td>
+                </tr>
+                <tr>
+                    <th>Date retenue</th>
+                    <td>{{ depannage.dateRetenue ? depannage.dateRetenue|date('d/m/Y') }}</td>
+                </tr>
+                <tr>
+                    <th>Demande faite le</th>
+                    <td>{{ depannage.dateSaisie|date('d/m/Y à H\\hi') }}</td>
+                </tr>
+                <tr>
+                    <th>Techniciens selectionnés</th>
+                    <td>
+                        {% for technicien in depannage.techniciens %}
+                            {% if is_granted(ROLE_ADMIN) %}
+                                <a href="{{ url('user_show', {id: technicien.id}) }}">
+                                    {{ technicien.nom ~ ' ' ~ technicien.prenom }}
+                                </a>
+                            {% else %}
+                                {{ technicien.nom ~ ' ' ~ technicien.prenom }}
+                            {% endif %}
+                            {{ loop.last == false ? '<br>' }}
+                        {% endfor %}
+                    </td>
+                </tr>
+                {% if depannage.factureDepannageLigne and (is_granted(ROLE_ADMIN) or is_granted(ROLE_CLIENT)) %}
+                    <tr>
+                        <th>Facture</th>
+                        <td>
+                            {% if is_granted(ROLE_ADMIN) %}
+                                <a href="{{ url('factures_facture_depannage_show_admin', {id: depannage.factureDepannageLigne.facture.id, client: client.id}) }}">Voir la facture</a>
+                            {% else %}
+                                <a href="{{ url('factures_facture_depannage_show', {id: depannage.factureDepannageLigne.facture.id}) }}">Voir la facture</a>
+                            {% endif %}
+                            <a data-toggle="tooltip" data-title="Imprimer la facture" class="ml-2" href="{{ url('factures_facture_depannage_pdf', {id: depannage.factureDepannageLigne.facture.id}) }}"><i class="fas fa-file-pdf mr-1"></i></a>
+
+                        </td>
+                    </tr>
+                {% endif %}
+
+                <tr>
+                    <th>Commentaires</th>
+                    <td>{{ depannage.commentaires|nl2br }}</td>
+                </tr>
+
+                </tbody>
+            </table>
+
+            {% if (is_granted(ROLE_ADMIN) or is_granted(ROLE_TECHNICIEN)) and depannage.statut.id in [STATUT_EN_ATTENTE, STATUT_VALIDE, STATUT_EN_COURS] %}
+                <div class="text-center mt-3">
+                    <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#modalCloture">Clôturer</button>
+                    <p class="p-0 small">
+                        Après la clôture, les techniciens ne pourront plus ajouter d'horaire. Le chargé d'affaires ne pourra plus effectuer de modification. Le chargé d'affaire recevra un mail qui lui indiquera la fin du dépannage.
+                    </p>
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="col-12 col-lg-5 column">
+
+
+            <div class="">
+                {% if is_granted(ROLE_TECHNICIEN) and formHoraire is defined %}
+                    <h3 class="text-center mb-4">Mes horaires</h3>
+                    <div class="border col-12">
+                        <h5 class="text-center mt-2">Nouvelle saisie</h5>
+                        {% if formHoraire.vars.value.id != null %}
+                            <div>
+                                Début : {{ formHoraire.vars.value.dateDebut|date('d/m/Y à H\\hi') }}
+                            </div>
+                        {% endif %}
+                        {{ form_start(formHoraire) }}
+                        {{ form_widget(formHoraire) }}
+                        {{ form_end(formHoraire) }}
+                    </div>
+                    {% if horaires is not empty %}
+                        <h5 class="text-center mt-3">Mes saisies</h5>
+                        {% include 'depannage/include/_table_horaires.html.twig' with {noDisplayTech: true} %}
+                    {% endif %}
+                {% else %}
+                    {% if horaires is not empty %}
+                        <h3 class="text-center">Horaires</h3>
+                        {% include 'depannage/include/_table_horaires.html.twig' %}
+                    {% endif %}
+                {% endif %}
+
+                {% if is_granted(ROLE_ADMIN) and formHoraireNew is defined %}
+                    <h3 class="text-center mb-4">Horaires</h3>
+                    <div class="border col-12">
+                        <h5 class="text-center mt-2">Nouvelle saisie</h5>
+                        {{ form_start(formHoraireNew) }}
+                        {{ form_widget(formHoraireNew) }}
+                        {{ form_end(formHoraireNew) }}
+                    </div>
+
+                {% endif %}
+            </div>
+
+            {% if files is not empty or is_granted(ROLE_TECHNICIEN) or is_granted(ROLE_ADMIN) %}
+
+                <div class="my-3">
+                    <h3 class="text-center mt-2">Fichiers</h3>
+                    <div class="border col-12 py-3">
+                        {% if files is not empty or depannage.depannageBonInterventions|length > 0 %}
+                            <ul class="list-style-type-none">
+                                {# Bons d'intervention de contrat d'depannage #}
+                                {% for depannageBonIntervention in depannage.depannageBonInterventions %}
+                                    <li class="d-flex justify-content-between align-items-center">
+                                        <span>
+                                            <i class="fas fa-file-pdf mr-1"></i>
+                                            <a target="_blank" href="{{ url('depannage_bon_intervention_pdf', {id: depannageBonIntervention.id}) }}">Bon d'intervention{{ ' n°' ~ loop.index }}</a>
+                                        </span>
+                                        {% if (is_granted(ROLE_TECHNICIEN) and depannage.statut.id == STATUT_EN_COURS) or (is_granted(ROLE_ADMIN) and depannage.statut.id in [STATUT_EN_COURS,STATUT_TERMINE]) %}
+                                            <span class="white-space-nowrap">
+                                              <a href="{{ url('depannage_bon_intervention_edit', {id: depannageBonIntervention.id}) }}"><i class="fas fa-pen mr-1 rename_file_button"></i></a>
+                                        </span>
+                                        {% endif %}
+                                    </li>
+                                {% endfor %}
+
+
+                                {% for file in files %}
+                                    <li class="d-flex justify-content-between align-items-center item-file" data-file-origin="{{ replaceVariableFolderClient(dossier_fichier_depannages, depannage.chargeAffaire.client.id, depannage.chargeAffaire.id) ~ depannage.id ~ '/' ~ file.basename }}">
+                                        <span>
+                                        {% if (file.extension|lower) in ['png', 'svg', 'jpeg', 'jpg', 'gif'] %}
+                                            <i class="fas fa-file-image mr-1"></i>
+                                        {% elseif (file.extension|lower) in ['pdf'] %}
+                                            <i class="fas fa-file-pdf mr-1"></i>
+                                        {% else %}
+                                            <i class="fas fa-file mr-1"></i>
+                                        {% endif %}
+                                        <a target="_blank" href="{{ absolute_url(asset(replaceVariableFolderClient(dossier_fichier_depannages, depannage.chargeAffaire.client.id, depannage.chargeAffaire.id) ~ depannage.id ~ '/' ~ file.basename )) }}">{{ file.filename }}</a>
+                                        </span>
+                                        <span class="white-space-nowrap">
+                                            {% if (is_granted(ROLE_ADMIN) and depannage.statut.id not in [STATUT_FACTURE]) or (is_granted(ROLE_TECHNICIEN) and depannage.statut.id in [STATUT_VALIDE,STATUT_EN_COURS]) %}
+                                                <a href="{{ url('depannage_admin_delete_file', {id: depannage.id, client: client.id, file: file.basename}) }}"><i class="fas fa-trash mr-1"></i></a>
+                                            {% endif %}
+                                        </span>
+
+                                    </li>
+
+                                {% endfor %}
+                            </ul>
+                        {% endif %}
+
+                        {% if (is_granted(ROLE_TECHNICIEN) or is_granted(ROLE_ADMIN)) and formUploadFile is defined %}
+                            {{ form_start(formUploadFile) }}
+                            {{ form_widget(formUploadFile) }}
+                            <div class="text-center form-group">
+                                <button type="submit" class="btn btn-primary">Envoyer</button>
+                            </div>
+                            {{ form_end(formUploadFile) }}
+                        {% endif %}
+
+                        {% if is_granted(ROLE_TECHNICIEN) and depannage.statut.id == STATUT_EN_COURS %}
+                            <a href="{{ url('depannage_bon_intervention_new', {depannage: depannage.id}) }}"><i class="fas fa-clipboard-check mr-1"></i> Remplir le bon d'intervention</a><br>
+                        {% endif %}
+
+                    </div>
+                </div>
+
+            {% endif %}
+
+        </div>
+
+    </div>
+
+    {% if (is_granted(ROLE_ADMIN) or is_granted(ROLE_TECHNICIEN)) and depannage.statut.id in [STATUT_EN_ATTENTE, STATUT_VALIDE, STATUT_EN_COURS] %}
+
+        <div class="modal fade" id="modalCloture" tabindex="-1" role="dialog" aria-labelledby="modalCloture" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="modalCloture">Clôture du dépannage</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        {#                    {% if facture.facturePaiements|length > 0 %}#}
+                        <h5>Vous êtes sur le point de clôturer le dépannage.</h5>
+
+                        <p class="p-0 small">
+                            Après la clôture, les techniciens ne pourront plus ajouter d'horaire. Le chargé d'affaires ne pourra plus effectuer de modification.<br>Le chargé d'affaires recevra un mail qui lui indiquera la fin du dépannage.
+                        </p>
+                        {#                    {% endif %}#}
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
+                        <a class="btn btn-warning" href="{{ url('depannage_cloture', {id: depannage.id, client: depannage.chargeAffaire.client.id}) }}">Clôturer</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+
+{% endblock %}

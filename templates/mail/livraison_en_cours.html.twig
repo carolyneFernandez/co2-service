@@ -1,0 +1,28 @@
+{% extends 'mail/base_mail.html.twig' %}
+
+{% block title %}En chemin{% endblock %}
+
+{% block body %}
+    <div>
+        <p>
+            Bonjour,<br>
+            <br>
+            Votre livraison n°{{ livraison.id }} vient d'être retirée de sa provenance. Vous recevrez un second email pour vous informer de sa livraison.<br>
+            <br>
+            REF : {{ livraison.reference }}<br>
+            Enseigne d'arrivée : {{ livraison.enseigneArrivee.nom }}<br>
+            Adresse d'arrivée : {{ livraison.adresseArrivee|nl2br }}<br>
+            <br>
+        </p>
+        <div class="text-center mb-2">
+            <a href="{{ url('livraison_show', {id: livraison.id}) }}" class="btn btn-primary">Voir la
+                livraison</a>
+        </div>
+        <p>
+            <br>
+            Cordialement,<br>
+            <br>
+            CO2Services
+        </p>
+    </div>
+{% endblock %}

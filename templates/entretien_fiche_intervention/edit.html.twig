@@ -1,0 +1,19 @@
+{% extends is_granted(ROLE_ADMIN) ? 'client/base_client.html.twig' : 'base.html.twig' %}
+
+{% block title %}Modifier fiche d'intervention{% endblock %}
+
+{% block body %}
+    <h2 class="text-center">Fiche d'intervention N°{{ entretien_fiche_intervention.numero }}</h2>
+
+    <a href="{{ url('entretien_admin_show', {client: client.id, id: entretien.id}) }}" class="btn btn-secondary">Retour</a>
+
+    <div class="col-12 col-xl-10 mx-auto">
+
+        {{ include('entretien_fiche_intervention/_form.html.twig') }}
+    </div>
+    <div class="clearfix"></div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ encore_entry_script_tags('js/component/entretien/fiche_intervention_form') }}
+{% endblock %}

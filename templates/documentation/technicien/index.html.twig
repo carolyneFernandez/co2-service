@@ -1,0 +1,37 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Documentation{% endblock %}
+
+{% block subNav %}
+
+    <div class="wrapper">
+
+        {% include 'documentation/technicien/include/_nav.html.twig' %}
+
+        <div id="content">
+            <button type="button" id="sidebarCollapse" class="btn btn-sm btn-secondary sticky-top">
+                <i class="fas fa-angle-left"></i>
+            </button>
+
+            <div class="pl-3 mt-2 col-11 col-lg-10 div-documentation mx-auto">
+
+                {% include 'documentation/technicien/include/_messagerie_co2_services.html.twig' %}
+                {% include 'documentation/general/_statuts_activites.html.twig' %}
+
+            </div>
+
+
+        </div>
+
+    </div>
+
+    <div class="fixed-bottom-right"><a id="button-to-top" class="btn btn-secondary font-big" data-toggle="tooltip" title="Retour en haut"><i class="fas fa-angle-up"></i></a></div>
+
+{% endblock %}
+
+
+{% block footer %}{% endblock %}
+
+{% block javascripts %}
+    {{ encore_entry_script_tags('js/component/button-to-top') }}
+{% endblock %}

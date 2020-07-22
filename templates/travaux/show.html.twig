@@ -1,0 +1,275 @@
+{% extends is_granted(ROLE_ADMIN) ? 'client/base_client.html.twig' : 'base.html.twig' %}
+
+{% block title %}Travaux{% endblock %}
+
+{% block metaSocial %}
+    {% if travaux %}
+        {% if travaux.dateDebutRetenue %}
+            {% set titre = 'Demande de travaux n°' ~ travaux.id ~ ' du ' ~ travaux.dateDebutRetenue|date('d/m/Y \\à H\\hi') %}
+        {% else %}
+            {% set titre = 'Demande de travaux n°' ~ travaux.id ~ ' du ' ~ travaux.dateDebutSouhaitee|date('d/m/Y \\à H\\hi') %}
+        {% endif %}
+        {% include 'layout/_meta_social.html.twig' with {title: titre, description: titre } %}
+    {% else %}
+        {{ parent() }}
+    {% endif %}
+{% endblock %}
+
+{% block body %}
+    <h2 class="text-center">Demande de travaux</h2>
+
+    {% if is_granted(ROLE_ADMIN) %}
+        <a href="{{ url('travaux_client_list', {client: client.id}) }}" class="btn btn-secondary">Retour</a>
+        {% if is_granted(ROLE_ADMIN) and travaux.statut.id in [STATUT_EN_ATTENTE, STATUT_VALIDE, STATUT_EN_COURS] %}
+            <a href="{{ url('travaux_edit', {'id': travaux.id}) }}" class="btn btn-outline-warning pull-right mb-2">Modifier</a>
+        {% endif %}
+    {% else %}
+        <a href="{{ url('travaux_index') }}" class="btn btn-secondary">Retour</a>
+        {% if is_granted(ROLE_CLIENT) and travaux.statut.id in [STATUT_EN_ATTENTE, STATUT_VALIDE, STATUT_EN_COURS] %}
+            <a href="{{ url('travaux_edit', {'id': travaux.id}) }}" class="btn btn-outline-warning pull-right mb-2">Modifier</a>
+        {% endif %}
+    {% endif %}
+
+    <div class="col-sm-12 col-md-10 mx-auto mt-3 d-flex {{ is_granted(ROLE_TECHNICIEN) ? 'flex-column-reverse' : 'flex-column' }}  flex-lg-row justify-content-between">
+        <div class="col-12 {{ horaires is not empty or formHoraire is defined or is_granted(ROLE_ADMIN) or files is not empty ? 'col-lg-6' }}">
+            <table class="table table-sm">
+                <tbody>
+                <tr>
+                    <th>N°</th>
+                    <td>{{ travaux.id }}</td>
+                </tr>
+                {% if is_granted(ROLE_ADMIN) %}
+                    <tr>
+                        <th>Chargé d'affaire</th>
+                        <td>
+                            <a href="{{ url('user_show', {client: client.id, id: travaux.chargeAffaire.id}) }}">
+                                {{ travaux.chargeAffaire.nom ~ ' ' ~ travaux.chargeAffaire.prenom }}</a>
+                        </td>
+                    </tr>
+                {% endif %}
+                <tr>
+                    <th>Statut</th>
+                    <td>{{ travaux.statut.libelle|capitalize }}</td>
+                </tr>
+                <tr>
+                    <th>Enseigne</th>
+                    <td>{{ travaux.enseigne ? travaux.enseigne.nom }}</td>
+                </tr>
+                <tr>
+                    <th>Ville</th>
+                    <td>{{ travaux.ville }}</td>
+                </tr>
+                <tr>
+                    <th>Departement</th>
+                    <td>{{ travaux.departement }}</td>
+                </tr>
+                <tr>
+                    <th>Adresse</th>
+                    <td>{{ travaux.adresse|nl2br }}</td>
+                </tr>
+                <tr>
+                    <th>Type d'intervention</th>
+                    <td>{{ travaux.typeIntervention }}</td>
+                </tr>
+                <tr>
+                    <th>Reference</th>
+                    <td>{{ travaux.reference }}</td>
+                </tr>
+                <tr>
+                    <th>Techniciens nécessaires</th>
+                    <td>{{ travaux.nombreTechNecessaire }}</td>
+                </tr>
+                <tr>
+                    <th>Jours nécessaires</th>
+                    <td>{{ travaux.nombreJourNecessaire }}</td>
+                </tr>
+                <tr>
+                    <th>Suivi travaux</th>
+                    <td>
+                        {% if travaux.suiviTravaux == null %}
+                            Aucun suivi de travaux n'a été renseigné.
+                        {% else %}
+                            {{ travaux.suiviTravaux|nl2br }}
+                        {% endif %}
+                    </td>
+                </tr>
+                <tr>
+                    <th>Date de commencement souhaitée</th>
+                    <td>{{ travaux.dateDebutSouhaitee|date('d/m/Y') }}</td>
+                </tr>
+                <tr>
+                    <th>Date de commencement retenue</th>
+                    <td>{{ travaux.dateDebutRetenue ? travaux.dateDebutRetenue|date('d/m/Y') }}</td>
+                </tr>
+                <tr>
+                    <th>Demande faite le</th>
+                    <td>{{ travaux.dateSaisie|date('d/m/Y à H\\hi') }}</td>
+                </tr>
+                <tr>
+                    <th>Techniciens selectionnés</th>
+                    <td>
+                        {% for technicien in travaux.techniciens %}
+                            {% if is_granted(ROLE_ADMIN) %}
+                                <a href="{{ url('user_show', {id: technicien.id}) }}">
+                                    {{ technicien.nom ~ ' ' ~ technicien.prenom }}
+                                </a>
+                            {% else %}
+                                {{ technicien.nom ~ ' ' ~ technicien.prenom }}
+                            {% endif %}
+                            {{ loop.last == false ? '<br>' }}
+                        {% endfor %}
+                    </td>
+                </tr>
+                {% if travaux.factureTravauxLigne and (is_granted(ROLE_ADMIN) or is_granted(ROLE_CLIENT)) %}
+                    <tr>
+                        <th>Facture</th>
+                        <td>
+                            {% if is_granted(ROLE_ADMIN) %}
+                                <a href="{{ url('factures_facture_travaux_show_admin', {id: travaux.factureTravauxLigne.facture.id, client: client.id}) }}">Voir la facture</a>
+                            {% else %}
+                                <a href="{{ url('factures_facture_travaux_show', {id: travaux.factureTravauxLigne.facture.id}) }}">Voir la facture</a>
+                            {% endif %}
+                            <a data-toggle="tooltip" data-title="Imprimer la facture" class="ml-2" href="{{ url('factures_facture_travaux_pdf', {id: travaux.factureTravauxLigne.facture.id}) }}"><i class="fas fa-file-pdf mr-1"></i></a>
+
+                        </td>
+                    </tr>
+                {% endif %}
+                <tr>
+                    <th>Commentaires</th>
+                    <td>{{ travaux.commentaires|nl2br }}</td>
+                </tr>
+
+
+                </tbody>
+            </table>
+
+            {% if (is_granted(ROLE_ADMIN) or is_granted(ROLE_TECHNICIEN)) and travaux.statut.id in [STATUT_EN_ATTENTE, STATUT_VALIDE, STATUT_EN_COURS] %}
+                <div class="text-center mt-3">
+                    <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#modalCloture">Clôturer</button>
+                    <p class="p-0 small">
+                        Après la clôture, les techniciens ne pourront plus ajouter d'horaire. Le chargé d'affaire ne pourra plus effectuer de modification. Le chargé d'affaires recevra un mail qui lui indiquera la fin des travaux.
+                    </p>
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="col-12 col-lg-5 column">
+
+
+            <div class="">
+                {% if is_granted(ROLE_TECHNICIEN) and formHoraire is defined %}
+                    <h3 class="text-center mb-4">Mes horaires</h3>
+                    <div class="border col-12">
+                        <h5 class="text-center mt-2">Nouvelle saisie</h5>
+                        {% if formHoraire.vars.value.id != null %}
+                            <div>
+                                Début : {{ formHoraire.vars.value.dateDebut|date('d/m/Y à H\\hi') }}
+                            </div>
+                        {% endif %}
+                        {{ form_start(formHoraire) }}
+                        {{ form_widget(formHoraire) }}
+                        {{ form_end(formHoraire) }}
+                    </div>
+                    {% if horaires is not empty %}
+                        <h5 class="text-center mt-3">Mes saisies</h5>
+                        {% include 'travaux/include/_table_horaires.html.twig' with {noDisplayTech: true} %}
+                    {% endif %}
+                {% else %}
+                    {% if horaires is not empty %}
+                        <h3 class="text-center">Horaires</h3>
+                        {% include 'travaux/include/_table_horaires.html.twig' %}
+                    {% endif %}
+                {% endif %}
+
+                {% if is_granted(ROLE_ADMIN) and formHoraireNew is defined %}
+                    {% if horaires is empty %}
+                        <h3 class="text-center mb-4">Horaires</h3>
+                    {% endif %}
+                    <div class="border col-12">
+                        <h5 class="text-center mt-2">Nouvelle saisie</h5>
+                        {{ form_start(formHoraireNew) }}
+                        {{ form_widget(formHoraireNew) }}
+                        {{ form_end(formHoraireNew) }}
+                    </div>
+
+                {% endif %}
+            </div>
+
+            {% if files is not empty or is_granted(ROLE_TECHNICIEN) or is_granted(ROLE_ADMIN) %}
+
+                <div class="my-3">
+                    <h3 class="text-center mt-2">Fichiers</h3>
+                    <div class="border col-12 pt-3">
+                        {% if files is not empty %}
+                            <ul class="list-style-type-none">
+                                {% for file in files %}
+                                    <li class="d-flex justify-content-between align-items-center item-file" data-file-origin="{{ replaceVariableFolderClient(dossier_fichier_travaux, travaux.chargeAffaire.client.id, travaux.chargeAffaire.id) ~ travaux.id ~ '/' ~ file.basename }}">
+                                        <span>
+                                        {% if (file.extension|lower) in ['png', 'svg', 'jpeg', 'jpg', 'gif'] %}
+                                            <i class="fas fa-file-image mr-1"></i>
+                                        {% elseif (file.extension|lower) in ['pdf'] %}
+                                            <i class="fas fa-file-pdf mr-1"></i>
+                                        {% else %}
+                                            <i class="fas fa-file mr-1"></i>
+                                        {% endif %}
+                                        <a target="_blank" href="{{ absolute_url(asset(replaceVariableFolderClient(dossier_fichier_travaux, travaux.chargeAffaire.client.id, travaux.chargeAffaire.id) ~ travaux.id ~ '/' ~ file.basename )) }}">{{ file.filename }}</a>
+                                        </span>
+                                        <span class="white-space-nowrap">
+                                            {% if (is_granted(ROLE_ADMIN) and travaux.statut.id not in [STATUT_FACTURE]) or (is_granted(ROLE_TECHNICIEN) and travaux.statut.id in [STATUT_VALIDE,STATUT_EN_COURS]) %}
+                                                <a href="{{ url('travaux_admin_delete_file', {id: travaux.id, client: client.id, file: file.basename}) }}"><i class="fas fa-trash mr-1"></i></a>
+                                            {% endif %}
+                                        </span>
+
+
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        {% endif %}
+
+                        {% if ((is_granted(ROLE_TECHNICIEN) and travaux.statut.id in [STATUT_EN_COURS] ) or (is_granted(ROLE_ADMIN) and travaux.statut.id in [STATUT_EN_COURS, STATUT_VALIDE, STATUT_TERMINE]) )  and formUploadFile is defined %}
+                            {{ form_start(formUploadFile) }}
+                            {{ form_widget(formUploadFile) }}
+                            <div class="text-center form-group">
+                                <button type="submit" class="btn btn-primary">Envoyer</button>
+                            </div>
+                            {{ form_end(formUploadFile) }}
+                        {% endif %}
+                    </div>
+                </div>
+
+            {% endif %}
+
+        </div>
+
+    </div>
+
+
+    {% if (is_granted(ROLE_ADMIN) or is_granted(ROLE_TECHNICIEN)) and travaux.statut.id in [STATUT_EN_ATTENTE, STATUT_VALIDE, STATUT_EN_COURS] %}
+
+        <div class="modal fade" id="modalCloture" tabindex="-1" role="dialog" aria-labelledby="modalCloture" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="modalCloture">Clôture de travaux</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        {#                    {% if facture.facturePaiements|length > 0 %}#}
+                        <h5>Vous êtes sur le point de clôturer le travaux.</h5>
+
+                        <p class="p-0 small">
+                            Après la clôture, les techniciens ne pourront plus ajouter d'horaire. Le chargé d'affaires ne pourra plus effectuer de modification.<br>Le chargé d'affaires recevra un mail qui lui indiquera la fin des travaux.
+                        </p>
+                        {#                    {% endif %}#}
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
+                        <a class="btn btn-warning" href="{{ url('travaux_cloture', {id: travaux.id, client: travaux.chargeAffaire.client.id}) }}">Clôturer</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+{% endblock %}

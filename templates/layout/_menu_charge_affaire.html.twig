@@ -1,0 +1,84 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary p-2 p-md-4">
+    <a class="navbar-brand" href="{{ url('index') }}"><img src="{{ asset('assets/img/logos/logo_texte_CO2Services.png') }}" alt="logo"
+                                                           class="logo-text"></a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText"
+            aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarText">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item {{ app.request.attributes.get('_route') starts with 'index' ? 'active' }}">
+                <a class="nav-link" href="{{ url('index') }}">Tableau de bord</a>
+            </li>
+            <li class="nav-item {{ app.request.attributes.get('_route') starts with 'livraison_' ? 'active' }}">
+                <a class="nav-link" href="{{ url('livraison_index') }}">Livraisons</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link {{ app.request.attributes.get('_route') starts with 'depannage_' ? 'active' }}" href="{{ url('depannage_index') }}">Dépannages</a>
+            </li>
+            <li class="nav-item dropdown">
+                <a class="nav-link {{ app.request.attributes.get('_route') starts with 'entretien' ? 'active' }} dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Entretiens
+                </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                    <a class="dropdown-item  {{ app.request.attributes.get('_route') starts with 'entretien_index' ? 'active' }}" href="{{ url('entretien_index') }}">Calendrier</a>
+                    <a class="dropdown-item  {{ app.request.attributes.get('_route') starts with 'entretien_list' ? 'active' }}" href="{{ path('entretien_list') }}">Liste</a>
+                </div>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link {{ app.request.attributes.get('_route') starts with 'travaux_' ? 'active' }}" href="{{ url('travaux_index') }}">Travaux</a>
+            </li>
+            <li class="nav-item dropdown">
+                <a class="nav-link {{ app.request.attributes.get('_route') starts with 'facture_' ? 'active' }} dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Factures
+                </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                    <a class="dropdown-item  {{ app.request.attributes.get('_route') starts with 'facture_livraison' ? 'active' }}" href="{{ url('factures_facture_livraison_index') }}">Factures livraisons</a>
+                    <a class="dropdown-item  {{ app.request.attributes.get('_route') starts with 'facture_depannage' ? 'active' }}" href="{{ url('factures_facture_depannage_index') }}">Factures dépannages</a>
+                    <a class="dropdown-item  {{ app.request.attributes.get('_route') starts with 'facture_entretien' ? 'active' }}" href="{{ url('factures_facture_entretien_index') }}">Factures entretiens</a>
+                    <a class="dropdown-item  {{ app.request.attributes.get('_route') starts with 'facture_travaux' ? 'active' }}" href="{{ url('factures_facture_travaux_index') }}">Factures travaux</a>
+                    <a class="dropdown-item  {{ app.request.attributes.get('_route') starts with 'facture_rappel_bouteille' ? 'active' }}" href="{{ url('factures_facture_rappel_bouteille_index') }}">Factures retours bouteilles</a>
+                    {#                    <a class="dropdown-item  {{ app.request.attributes.get('_route') starts with 'entretien_list' ? 'active' }}" href="{{ path('entretien_list') }}">Factures dépannages</a>#}
+                </div>
+            </li>
+
+            {#            <li class="nav-item dropdown {{ app.request.attributes.get('_route') starts with 'enseigne_' ? 'active' }}">#}
+            {#                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">#}
+            {#                    Réglages#}
+            {#                </a>#}
+            {#                <div class="dropdown-menu" aria-labelledby="navbarDropdown">#}
+            {#                    <a class="dropdown-item {{ app.request.attributes.get('_route') starts with 'enseigne_' ? 'active' }}" href="{{ url('enseigne_index') }}">Enseignes</a>#}
+            {#                    <a class="dropdown-item" href="#">Another action</a>#}
+            {#                </div>#}
+            {#            </li>#}
+
+
+            {#            <li class="nav-item ">#}
+            {#                <a class="nav-link" href=""></a>#}
+            {#            </li>#}
+            {#            #}{#            <li class="nav-item">#}
+            {#            #}{#                <a class="nav-link" href="#">Entretiens</a>#}
+            {#            #}{#            </li>#}
+            {#            #}{#            <li class="nav-item">#}
+            {#            #}{#                <a class="nav-link" href="#">Travaux</a>#}
+            {#            #}{#            </li>#}
+        </ul>
+        <ul class="navbar-nav">
+            <li class="nav-item dropdown {{ app.request.attributes.get('_route') starts with 'user_profil' ? 'active' }}">
+                <a class="nav-link dropdown-toggle text-center d-flex align-items-center" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <span class="d-inline-block pr-1">
+                        {{ app.user.nomPrenom }}<br>
+                        {{ app.user.client ? app.user.client.nom }}
+                    </span>
+                </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                    <a class="dropdown-item {{ app.request.attributes.get('_route') starts with 'user_profil' ? 'active' }}" href="{{ url('user_profil') }}">Mon compte</a>
+                    <a class="dropdown-item {{ app.request.attributes.get('_route') starts with 'documentation' ? 'active' }}" href="{{ url('documentation_charge_affaires') }}"><i class="far fa-life-ring"></i> Aide</a>
+                    <a class="dropdown-item text-danger {{ app.request.attributes.get('_route') starts with 'app_logout' ? 'active' }}" href="{{ url('app_logout') }}">Déconnexion</a>
+                </div>
+            </li>
+        </ul>
+
+    </div>
+</nav>

@@ -1,0 +1,90 @@
+<nav id="sidebar" class="border-right">
+    <!-- Sidebar Header -->
+    <div class="sidebar-header">
+        <h5 class="font-weight-normal text-center">Documentation</h5>
+    </div>
+
+    {#            <!-- Sidebar Links -->#}
+    {#            <ul class="list-unstyled components">#}
+    {#                <li class="active"><a href="#">Home</a></li>#}
+    {#                <li><a href="#">About</a></li>#}
+    {#                <li><!-- Link with dropdown items -->#}
+    {#                    <a href="#homeSubmenu" data-toggle="collapse" aria-expanded="false">Pages</a>#}
+    {#                    <ul class="collapse list-unstyled" id="homeSubmenu">#}
+    {#                        <li><a href="#">Page</a></li>#}
+    {#                        <li><a href="#">Page</a></li>#}
+    {#                        <li><a href="#">Page</a></li>#}
+    {#                    </ul>#}
+    {#                <li><a href="#">Portfolio</a></li>#}
+    {#                <li><a href="#">Contact</a></li>#}
+    {#            </ul>#}
+
+    <ul class="nav nav-pills d-flex w-100 flex-column justify-content-start ">
+
+        {#        <li class="nav-item mr-0">#}
+        {#            <a class="nav-link" href="#doc_tableauBord">Tableau de bord</a>#}
+        {#        </li>#}
+
+        <li class="nav-item mr-0">
+            <a class="nav-link dropdown-toggle collapse" href="#livraisonSubmenu" data-toggle="collapse" aria-expanded="false">Livraisons</a>
+            <div class="collapse list-unstyled dropdown bg-primary" id="livraisonSubmenu">
+                <a href="#doc_livraisons__new" class="dropdown-item text-white pl-4">Nouvelle</a>
+                <a href="#doc_livraisons__list" class="dropdown-item text-white pl-4">Liste</a>
+                <a href="#doc_livraisons__show" class="dropdown-item text-white pl-4">Détails</a>
+                <a href="#doc_livraisons__edit" class="dropdown-item text-white pl-4">Modifier</a>
+                <a href="#doc_livraisons__cancel" class="dropdown-item text-white pl-4">Annuler</a>
+            </div>
+        </li>
+
+        <li class="nav-item mr-0">
+            <a class="nav-link dropdown-toggle collapse" href="#depannageSubmenu" data-toggle="collapse" aria-expanded="false">Dépannages</a>
+            <div class="collapse list-unstyled dropdown bg-primary" id="depannageSubmenu">
+                <a href="#doc_depannages__new" class="dropdown-item text-white pl-4">Nouveau</a>
+                <a href="#doc_depannages__list" class="dropdown-item text-white pl-4">Liste</a>
+                <a href="#doc_depannages__show" class="dropdown-item text-white pl-4">Détails</a>
+                <a href="#doc_depannages__edit" class="dropdown-item text-white pl-4">Modifier</a>
+                <a href="#doc_depannages__cancel" class="dropdown-item text-white pl-4">Annuler</a>
+            </div>
+        </li>
+
+        <li class="nav-item mr-0">
+            <a class="nav-link dropdown-toggle collapse" href="#entretiensubmenu" data-toggle="collapse" aria-expanded="false">Entretiens</a>
+            <div class="collapse list-unstyled dropdown bg-primary" id="entretiensubmenu">
+                <a href="#doc_entretiens__new" class="dropdown-item text-white pl-4">Nouveau</a>
+                <a href="#doc_entretiens__list" class="dropdown-item text-white pl-4">Liste</a>
+                <a href="#doc_entretiens__show" class="dropdown-item text-white pl-4">Détails</a>
+                <a href="#doc_entretiens__edit" class="dropdown-item text-white pl-4">Modifier</a>
+                <a href="#doc_entretiens__cancel" class="dropdown-item text-white pl-4">Annuler</a>
+            </div>
+        </li>
+
+        <li class="nav-item mr-0">
+            <a class="nav-link dropdown-toggle collapse" href="#travauxubmenu" data-toggle="collapse" aria-expanded="false">Travaux</a>
+            <div class="collapse list-unstyled dropdown bg-primary" id="travauxubmenu">
+                <a href="#doc_travaux__new" class="dropdown-item text-white pl-4">Nouveau</a>
+                <a href="#doc_travaux__list" class="dropdown-item text-white pl-4">Liste</a>
+                <a href="#doc_travaux__show" class="dropdown-item text-white pl-4">Détails</a>
+                <a href="#doc_travaux__edit" class="dropdown-item text-white pl-4">Modifier</a>
+                <a href="#doc_travaux__cancel" class="dropdown-item text-white pl-4">Annuler</a>
+            </div>
+        </li>
+
+        <li class="nav-item mr-0">
+            <a class="nav-link dropdown-toggle collapse" href="#facturesSubmenu" data-toggle="collapse" aria-expanded="false">Factures</a>
+            <div class="collapse list-unstyled dropdown bg-primary" id="facturesSubmenu">
+                <a href="#doc_factures" class="dropdown-item text-white pl-4">Général</a>
+                <a href="#doc_factures__livraisons" class="dropdown-item text-white pl-4">Factures livraisons</a>
+                <a href="#doc_factures__depannages" class="dropdown-item text-white pl-4">Factures dépannages</a>
+                <a href="#doc_factures__entretiens" class="dropdown-item text-white pl-4">Factures entretiens</a>
+                <a href="#doc_factures__travaux" class="dropdown-item text-white pl-4">Factures travaux</a>
+                <a href="#doc_factures__retours_bouteilles" class="dropdown-item text-white pl-4">Factures retours bouteilles</a>
+            </div>
+        </li>
+
+
+        <li class="nav-item mr-0">
+            <a class="nav-link " href="#doc_stats_activites">Statuts des activités</a>
+        </li>
+
+    </ul>
+</nav>

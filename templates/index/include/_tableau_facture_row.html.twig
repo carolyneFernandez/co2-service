@@ -1,0 +1,37 @@
+<tr class="row-href"
+        {% if is_granted(ROLE_ADMIN) %}
+            {% if facture.type == 'travaux' %}
+                data-href="{{ url('factures_facture_travaux_show_admin', {id: facture.id, client: facture.chargeAffaire.client.id}) }}"
+            {% elseif facture.type == 'entretien' %}
+                data-href="{{ url('factures_facture_entretien_show_admin', {id: facture.id, client: facture.chargeAffaire.client.id}) }}"
+            {% elseif facture.type == 'dépannage' %}
+                data-href="{{ url('factures_facture_depannage_show_admin', {id: facture.id, client: facture.chargeAffaire.client.id}) }}"
+            {% elseif facture.type == 'livraison' %}
+                data-href="{{ url('factures_facture_livraison_show_admin', {id: facture.id, client: facture.chargeAffaire.client.id}) }}"
+            {% elseif facture.type == 'retour bouteilles' %}
+                data-href="{{ url('factures_facture_rappel_bouteille_show_admin', {id: facture.id, client: facture.chargeAffaire.client.id}) }}"
+            {% endif %}
+        {% else %}
+            {% if facture.type == 'travaux' %}
+                data-href="{{ url('factures_facture_travaux_show', {id: facture.id}) }}"
+            {% elseif facture.type == 'entretien' %}
+                data-href="{{ url('factures_facture_entretien_show', {id: facture.id}) }}"
+            {% elseif facture.type == 'dépannage' %}
+                data-href="{{ url('factures_facture_depannage_show', {id: facture.id}) }}"
+            {% elseif facture.type == 'livraison' %}
+                data-href="{{ url('factures_facture_livraison_show', {id: facture.id}) }}"
+            {% elseif facture.type == 'retour bouteilles' %}
+                data-href="{{ url('factures_facture_rappel_bouteille_show', {id: facture.id}) }}"
+            {% endif %}
+
+        {% endif %}
+>
+    <td>{{ facture.numero }}</td>
+    {% if is_granted(ROLE_ADMIN) %}
+        <td>{{ facture.chargeAffaire.nomPrenom }}</td>
+    {% endif %}
+    <td class="text-center">{{ facture.type|capitalize }}</td>
+    <td class="text-center">{{ facture.date ? facture.date|date('d/m/Y \\à H\\hi') }}</td>
+    <td class="text-center white-space-nowrap">{{ facture.montantTTC|number_format(2, ',', ' ') }} €</td>
+    <td class="text-center white-space-nowrap">{{ facture.getResteMontant|number_format(2, ',', ' ') }} €</td>
+</tr>

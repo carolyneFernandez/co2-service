@@ -1,0 +1,281 @@
+{% import 'function/_macro_form.html.twig' as macroForm %}
+{% import 'entretien_fiche_intervention/include/_prototypes.html.twig' as formMacro %}
+
+{{ form_start(form) }}
+
+    {{ form_row(form.numero) }}
+    {{ form_row(form.detendeur) }}
+
+<fieldset class="border p-2 mb-2">
+    <legend class="w-auto mx-auto text-center px-3">Équipement concerné</legend>
+    {{ form_row(form.EC_Identification) }}
+    <div class="row flex-column flex-md-row">
+        <div class="col-12 col-md-6">
+            {{ macroForm.input_addons(form.EC_Nature_fluide) }}
+        </div>
+        <div class="col-12 col-md-6">
+            {{ macroForm.input_addons(form.EC_Charge_totale) }}
+        </div>
+    </div>
+    {{ macroForm.input_addons(form.EC_Tonnage_eq) }}
+</fieldset>
+
+
+<fieldset class="border p-2 mb-2">
+    <legend class="w-auto mx-auto text-center px-3">Nature de l'intervention</legend>
+    {{ form_row(form.N_intervention) }}
+    {{ form_row(form.N_intervention_autre) }}
+    {{ form_row(form.N_observations) }}
+
+</fieldset>
+
+<fieldset class="border p-2 mb-2">
+    <legend class="w-auto mx-auto text-center px-3">Contrôle d'étanchéité</legend>
+    <h5 class="text-center">Détecteur manuel de fuite</h5>
+    <div class="row flex-column flex-md-row">
+        <div class="col-12 col-md-6">
+            {{ form_row(form.CE_Identification) }}
+        </div>
+        <div class="col-12 col-md-6">
+            {{ form_row(form.CE_date_controle) }}
+        </div>
+    </div>
+
+    {{ form_row(form.CE_sys_det_fuite) }}
+
+</fieldset>
+<fieldset class="border p-2 mb-2">
+    <legend class="w-auto mx-auto text-center px-3">Fréquence minimale du contrôle périodique</legend>
+
+    <h5 class="text-center">Quantité de fluide frigorigène dans l'équipement</h5>
+    {{ form_row(form.QF_HCFC) }}
+    {{ form_row(form.HFC_PFC) }}
+    <hr>
+
+    {{ form_row(form.EQ_ss_detec_fuite) }}
+    {{ form_row(form.EQ_ac_detec_fuite) }}
+
+</fieldset>
+
+<fieldset class="border p-2 mb-2">
+    <legend class="w-auto mx-auto text-center px-3">Fuites</legend>
+
+    {{ form_row(form.fuitesConstatees) }}
+
+    {#    <div id="ficheInterFuites-div" class="">#}
+    <div id="ficheInterFuites-div" class="{{ form.vars.value.fuitesConstatees != true ? 'd-none' }}">
+
+        <h5 class="text-center">{{ form_label(form.entretienFicheInterventionFuites) }}</h5>
+        <div id="ficheInterFuites" data-prototype='{{ formMacro.printFuite(form.entretienFicheInterventionFuites.vars.prototype)|e }}' data-widget-tags="<div class='item-fuite'></div>" data-widget-conter="{{ form.entretienFicheInterventionFuites|length }}">
+            {% for fuite in form.entretienFicheInterventionFuites %}
+                <div class="item-fuite">
+                    {{ formMacro.printFuite(fuite) }}
+                </div>
+            {% endfor %}
+        </div>
+        <section class="text-center mb-2">
+            <button type="button" class="btn btn-outline-success btn-sm add-another-collection-lien-widget add-fourniture-button" data-list-selector="#ficheInterFuites"><i class="fa fa-plus"></i></button>
+        </section>
+    </div>
+
+
+</fieldset>
+
+
+<fieldset class="border p-2 mb-2">
+    <legend class="w-auto mx-auto text-center px-3 sticky-top bg-secondary ">Manipulation du fluide frigorigène</legend>
+
+    <div class="row flex-column flex-lg-row">
+        <div class="col-12 col-lg-6">
+
+            <h5 class="text-center">Fluide chargé</h5>
+            {{ macroForm.input_addons(form.MFF_QT_Charge_tot) }}
+            {{ macroForm.input_addons(form.MFF_QT_Charge_A) }}
+            {{ macroForm.input_addons(form.MFF_QT_Charge_B) }}
+            {{ macroForm.input_addons(form.MFF_QT_Charge_C) }}
+
+        </div>
+        <div class="col-12 col-lg-6">
+            <h5 class="text-center">Fluide récupéré</h5>
+            {{ macroForm.input_addons(form.MFF_QT_Recup_tot) }}
+            {{ macroForm.input_addons(form.MFF_QT_Recup_D) }}
+            {{ macroForm.input_addons(form.MFF_QT_Recup_E) }}
+            {{ form_row(form.MFF_Identifiant_contenant) }}
+        </div>
+    </div>
+
+    <hr>
+
+    {{ form_row(form.Denom_ADR_RID) }}
+    {{ form_row(form.Denom_ADR_RID_autre) }}
+    <hr>
+    <div class="row flex-column flex-lg-row">
+        <div class="col-12 col-lg-6">
+            {{ form_row(form.Install_dest_dechets) }}
+            {{ form_row(form.Obs_num_bord_collect) }}
+            {{ form_row(form.Obs_num_bord_transf) }}
+        </div>
+        <hr>
+        <div class="col-12 col-lg-6">
+            {{ form_row(form.Trans_dechets) }}
+            {{ form_row(form.Install_traitement) }}
+            {{ form_row(form.Install_trait_code) }}
+            {{ form_row(form.Install_trait_qt_rec) }}
+        </div>
+    </div>
+
+</fieldset>
+
+
+<fieldset class="border p-2 mb-2">
+    <legend class="w-auto mx-auto text-center px-3 sticky-top bg-secondary ">Signature Opérateur</legend>
+    {{ form_row(form.SIGN_Ope_nom) }}
+    {{ form_row(form.SIGN_Ope_qual) }}
+    {{ form_row(form.SIGN_Ope_date) }}
+    {#    {{ form_row(form.SIGN_Ope_visa) }}#}
+
+    {{ form_label(form.SIGN_Ope_visa) }}<br>
+    <div class="border col-12 mb-2 text-center">
+        <img id="previewSignatureOperateur" src="{{ entretien_fiche_intervention.SIGNOpeVisa ? entretien_fiche_intervention.SIGNOpeVisa }}" alt=" " class="previewSignature">
+    </div>
+    <div class="text-center">
+        <button type="button" class="btn btn-outline-warning btn-sm" data-toggle="modal" data-target="#modalSignatureOperateur">
+            <i class="fa fa-pen"></i>
+        </button>
+    </div>
+    <div class="d-none">
+        {{ form_widget(form.SIGN_Ope_visa) }}
+    </div>
+
+</fieldset>
+
+<fieldset class="border p-2 mb-2">
+    <legend class="w-auto mx-auto text-center px-3 sticky-top bg-secondary ">Signature Détenteur</legend>
+    {{ form_row(form.SIGN_Det_nom) }}
+    {{ form_row(form.SIGN_Det_qual) }}
+    {{ form_row(form.SIGN_Det_date) }}
+
+    {{ form_label(form.SIGN_Det_visa) }}<br>
+    <div class="border col-12 mb-2 text-center">
+        <img id="previewSignatureDetenteur" src="{{ entretien_fiche_intervention.SIGNDetVisa ? entretien_fiche_intervention.SIGNDetVisa }}" alt=" " class="previewSignature">
+    </div>
+    <div class="text-center">
+        <button type="button" class="btn btn-outline-warning btn-sm" data-toggle="modal" data-target="#modalSignatureDetenteur">
+            <i class="fa fa-pen"></i>
+        </button>
+    </div>
+    <div class="d-none">
+        {{ form_widget(form.SIGN_Det_visa) }}
+    </div>
+
+</fieldset>
+
+<fieldset class="border p-2 mb-2">
+    <legend class="w-auto mx-auto text-center px-3 sticky-top bg-secondary ">Signature Installation de traitement</legend>
+    {{ form_row(form.SIGN_Inst_nom) }}
+    {{ form_row(form.SIGN_Inst_qual) }}
+    {{ form_row(form.SIGN_Inst_date) }}
+
+    {{ form_label(form.SIGN_Inst_visa) }}<br>
+    <div class="border col-12 mb-2 text-center">
+        <img id="previewSignatureInstallTraitement" src="{{ entretien_fiche_intervention.SIGNInstVisa ? entretien_fiche_intervention.SIGNInstVisa }}" alt=" " class="previewSignature">
+    </div>
+    <div class="text-center">
+        <button type="button" class="btn btn-outline-warning btn-sm" data-toggle="modal" data-target="#modalSignatureInstallTraitement">
+            <i class="fa fa-pen"></i>
+        </button>
+    </div>
+    <div class="d-none">
+        {{ form_widget(form.SIGN_Inst_visa) }}
+    </div>
+
+
+</fieldset>
+
+
+<div class="d-none">
+    {{ form_rest(form) }}
+</div>
+
+
+<div class="fixed-bottom-right">
+    <button class="btn btn-primary">{{ button_label|default('Enregistrer') }}</button>
+</div>
+{{ form_end(form) }}
+
+
+<!-- Modal -->
+<div class="modal fade" id="modalSignatureOperateur" tabindex="-1" role="dialog" aria-labelledby="modalSignatureOperateur" aria-hidden="true">
+    <div class="modal-dialog modal-xl  modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Signature Opérateur</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body d-flex flex-column align-items-center">
+                <div class="signature-pad">
+                    <div class="signature-pad--body" style="height: 50vh;">
+                        <canvas id="signatureOperateur" class="signature-pad--canvas w-100 h-100"></canvas>
+                    </div>
+                </div>
+                <button type="button" class="btn btn-outline-warning btn-sm clearButtonSignatureOperateur mt-2">&times;</button>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-primary" data-dismiss="modal">Fermer</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="modalSignatureDetenteur" tabindex="-1" role="dialog" aria-labelledby="modalSignatureDetenteur" aria-hidden="true">
+    <div class="modal-dialog modal-xl  modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Signature Détenteur</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body d-flex flex-column align-items-center">
+                <div class="signature-pad">
+                    <div class="signature-pad--body" style="height: 50vh;">
+                        <canvas id="signatureDetenteur" class="signature-pad--canvas w-100 h-100"></canvas>
+                    </div>
+                </div>
+                <button type="button" class="btn btn-outline-warning btn-sm clearButtonSignatureDetenteur mt-2">&times;</button>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-primary" data-dismiss="modal">Fermer</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="modalSignatureInstallTraitement" tabindex="-1" role="dialog" aria-labelledby="modalSignatureInstallTraitement" aria-hidden="true">
+    <div class="modal-dialog modal-xl  modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Signature Installation de traitement</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body d-flex flex-column align-items-center">
+                <div class="signature-pad">
+                    <div class="signature-pad--body" style="height: 50vh;">
+                        <canvas id="signatureInstallTraitement" class="signature-pad--canvas w-100 h-100"></canvas>
+                    </div>
+                </div>
+                <button type="button" class="btn btn-outline-warning btn-sm clearButtonSignatureInstallTraitement mt-2">&times;</button>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-primary" data-dismiss="modal">Fermer</button>
+            </div>
+        </div>
+    </div>
+</div>
+

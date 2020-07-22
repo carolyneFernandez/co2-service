@@ -1,0 +1,27 @@
+{% extends 'mail/base_mail.html.twig' %}
+
+{% block title %}Fin travaux{% endblock %}
+{# @var travaux \App\Entity\Travaux #}
+{% block body %}
+    <div>
+        <p>
+            Bonjour,<br>
+            <br>
+            Les travaux n°{{ travaux.id }} sont terminés. Merci d'avoir choisi nos services.<br>
+            <br>
+            Référence : {{ travaux.reference }}<br>
+            Enseigne : {{ travaux.enseigne.nom }}<br>
+            Adresse : {{ travaux.adresse|nl2br }}<br>
+            <br>
+        </p>
+        <div class="text-center mb-2">
+            <a href="{{ url('travaux_show', {id: travaux.id}) }}" class="btn btn-primary">Voir les travaux</a>
+        </div>
+        <p>
+            <br>
+            Cordialement,<br>
+            <br>
+            CO2Services
+        </p>
+    </div>
+{% endblock %}

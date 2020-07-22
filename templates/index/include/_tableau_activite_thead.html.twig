@@ -1,0 +1,20 @@
+<thead>
+<tr>
+    {#    {% if is_granted(ROLE_ADMIN) or is_granted(ROLE_TECHNICIEN) %}#}
+    <th>N°</th>
+    {#    {% endif %}#}
+    {% if is_granted(ROLE_ADMIN) %}
+        <th>Chargé d'affaire</th>
+    {% endif %}
+    <th class="text-center">Type de demande</th>
+    {% if typeDate is defined and typeDate == 'retenue' %}
+        <th class="text-center">Date</th>
+    {% else %}
+        <th class="text-center">Date souhaitée</th>
+    {% endif %}
+    <th class="text-center">Enseigne d'origine</th>
+    {% if dateDemande is defined and dateDemande == 'true' %}
+        <th class="text-center">Date de la demande</th>
+    {% endif %}
+</tr>
+</thead>

@@ -1,0 +1,69 @@
+<h3 id="doc_depannages" class="mt-5">Dépannages</h3>
+
+<p class="pl-3">
+    <a target="_blank" href="{{ url('depannage_index') }}" class="text-underline"><i class="fas fa-link mr-1"></i>Liste des depannages</a>
+    <br>
+    En tant que chargé d'affaires, vous pouvez faire des demandes de dépannage. Ces demandes seront traitées par CO2Services.
+</p>
+
+<h4 class="pl-3 mt-4" id="doc_depannages__new">Nouveau dépannage</h4>
+<p class="pl-5">
+    Dans la <a class="text-underline" target="_blank" href="{{ url('depannage_index') }}">liste des dépannages</a>, cliquez sur
+    <button type="button" class="btn btn-sm btn-outline-success">Nouvelle demande de dépannage</button>
+    .<br>
+    Vous arriverez alors sur le formulaire de demande de dépannage.<br>
+    <br>
+    Renseignez la date de dépannage souhaitée. Le champ &laquo; Référence &raquo; représente votre référence à vous.<br>
+    Renseignez également l'enseigne où aura lieu le dépannage ainsi que l'adresse complète.<br>
+    <br>
+    Une fois votre saisie terminée, cliquez sur
+    <button type="button" class="btn btn-primary btn-sm">Enregistrer</button>
+    .<br>
+    CO2Services recevra une notification de demande de dépannage par email. Ils définiront une date retenue en fonction des ressources disponibles.<br>
+    <br>
+    Statut du dépannage à ce stade : En attente
+</p>
+
+<h4 class="pl-3 mt-4" id="doc_depannages__list">Liste des dépannages</h4>
+<p class="pl-5">
+    Dans la <a class="text-underline" target="_blank" href="{{ url('depannage_index') }}">liste des dépannages</a>, la liste est triée par date décroissante (les plus anciens en derniers).<br>
+    Cliquez sur les entêtes de tableau pour trier sur d'autre colonne.<br>
+    Vous pouvez filtrer cette liste en cliquant sur le bouton
+    <button class="btn btn-sm btn-outline-primary" type="button">Filtres</button>
+    .<br>
+    Dans la pagination, vous pouvez choisir le nombre de dépannages que vous souhaitez afficher par page.<br>
+</p>
+
+<h4 class="pl-3 mt-4" id="doc_depannages__show">Détails du dépannage</h4>
+<p class="pl-5">
+    Dans la <a class="text-underline" target="_blank" href="{{ url('depannage_index') }}">liste des dépannages</a>, cliquez sur le dépannage dont vous voulez voir le détails.<br>
+    Vous avez alors un récapitulatif du dépannage (date, adresses, références, statut du dépannage).<br>
+    Vous avez également accès en lecture aux fichiers qui ont été importés par CO2Services lors du dépannage. Vous pourrez également imprimer les PDF des bons d'interventions remplis par les techniciens.<br>
+    Vous aurez aussi un visuel sur les horaires saisit par les techniciens.
+</p>
+
+<h4 class="pl-3 mt-4" id="doc_depannages__edit">Modifier le dépannage</h4>
+<p class="pl-5">
+    Vous pouvez modifier un dépannage uniquement si le statut du dépannage est "En attente, Validée, ou En cours". Cela vous permettra de corriger des informations si nécessaire.<br>
+    Dans le <a href="#doc_depannages__show" class="text-underline">détails du dépannage</a>, cliquez sur
+    <button type="button" class="btn btn-sm btn-outline-warning">Modifier</button>
+    .<br>
+    Changez les informations que vous souhaitez puis cliquez sur
+    <button type="button" class="btn btn-sm btn-primary">Enregistrer</button>
+    .<br>
+    Une fois le dépannage terminé, vous ne pourrez plus effectuer de modification.
+</p>
+
+<h4 class="pl-3 mt-4" id="doc_depannages__cancel">Annuler le dépannage</h4>
+<p class="pl-5">
+    Vous pouvez annuler un dépannage tant que ce dernier n'a pas encore commencé.<br>
+    Dans le <a href="#doc_depannages__show" class="text-underline">détails du dépannage</a>, cliquez sur
+    <button type="button" class="btn btn-sm btn-outline-warning">Modifier</button>
+    .<br>
+    Puis cliquez sur
+    <button type="button" class="btn btn-sm btn-danger">Annuler</button>
+    . Vous serez amenés à remplir le motif d'annulation du dépannage.<br>
+    Une fois annulé, le dépannage ne s'effacera pas, il sera en statut &laquo; Annulé &raquo;.
+</p>
+
+<hr>

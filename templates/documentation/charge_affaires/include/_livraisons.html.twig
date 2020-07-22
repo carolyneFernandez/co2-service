@@ -1,0 +1,69 @@
+<h3 id="doc_livraisons" class="mt-5">Livraisons</h3>
+
+<p class="pl-3">
+    <a target="_blank" href="{{ url('livraison_index') }}" class="text-underline"><i class="fas fa-link mr-1"></i>Liste des livraisons</a>
+    <br>
+    En tant que chargé d'affaires, vous pouvez faire des demandes de livraisons. Ces demandes seront traitées par CO2Services. Vous recevrez une notification par email lorsque la marchandise aura été livrée.
+</p>
+
+<h4 class="pl-3 mt-4" id="doc_livraisons__new">Nouvelle livraison</h4>
+<p class="pl-5">
+    Dans la <a class="text-underline" target="_blank" href="{{ url('livraison_index') }}">liste des livraisons</a>, cliquez sur
+    <button type="button" class="btn btn-sm btn-outline-success">Nouvelle livraison</button>
+    .<br>
+    Vous arriverez alors sur le formulaire de demande de livraison.<br>
+    <br>
+    Renseignez la date de livraison souhaitée. Le champ &laquo; Référence &raquo; représente votre référence à vous.<br>
+    Renseignez également les adresse de départ et d'arrivée. Lorsque vous sélectionnez une enseigne, si elle possède une unique adresse de livraison, le champs &laquo; Adresse &raquo; se remplira automatiquement (vous pourrez la modifier si elle vous semble incorrecte).<br>
+    Les choix des départements sont importants. Ce sont eux qui permettront de facturer les livraisons. Chaque livraison est facturée en fonction du parcours entre les départements.<br>
+    <br>
+    Une fois votre saisie terminée, cliquez sur
+    <button type="button" class="btn btn-primary btn-sm">Créer</button>
+    .<br>
+    CO2Services recevra une notification de demande de livraison par email. Ils définiront une date retenue en fonction des ressources disponibles.<br>
+    <br>
+    Statut de la livraison à ce stade : En attente
+</p>
+
+<h4 class="pl-3 mt-4" id="doc_livraisons__list">Liste des livraisons</h4>
+<p class="pl-5">
+    Dans la <a class="text-underline" target="_blank" href="{{ url('livraison_index') }}">liste des livraisons</a>, vous aurez la liste des livraisons à venir triée par date décroissante (les plus anciennes en dernières).<br>
+    Cliquez sur les entêtes de tableau pour trier sur d'autre colonne.<br>
+    Vous pouvez filtrer cette liste en cliquant sur le bouton
+    <button class="btn btn-sm btn-outline-primary" type="button">Filtres</button>
+    .<br>
+    Dans la pagination, vous pouvez choisir le nombre de livraisons que vous souhaitez afficher par page.
+</p>
+
+<h4 class="pl-3 mt-4" id="doc_livraisons__show">Détails de la livraison</h4>
+<p class="pl-5">
+    Dans la <a class="text-underline" target="_blank" href="{{ url('livraison_index') }}">liste des livraisons</a>, cliquez sur la livraison dont vous voulez voir le détails.<br>
+    Vous avez alors un récapitulatifs de la livraison (date, adresses départ et d'arrivée, date de la relève, date de livraison, statut de la livraison).<br>
+    Vous avez également accès en lecture aux fichiers qui ont été importés par CO2Services lors de la livraison.<br>
+</p>
+
+<h4 class="pl-3 mt-4" id="doc_livraisons__edit">Modifier la livraison</h4>
+<p class="pl-5">
+    Vous pouvez modifier une livraison uniquement si le statut de la livraison est "En attente, Validée, ou En cours". Cela vous permettra de corriger des informations si nécessaire.<br>
+    Dans le <a href="#doc_livraisons__show" class="text-underline">détails de la livraison</a>, cliquez sur
+    <button type="button" class="btn btn-sm btn-outline-warning">Modifier</button>
+    .<br>
+    Changez les informations que vous souhaitez puis cliquez sur
+    <button type="button" class="btn btn-sm btn-primary">Enregistrer</button>
+    .<br>
+    Une fois la livraison terminée, vous ne pourrez plus effectuer de modification.
+</p>
+
+<h4 class="pl-3 mt-4" id="doc_livraisons__cancel">Annuler la livraison</h4>
+<p class="pl-5">
+    Vous pouvez annuler une livraison tant que cette dernière n'a pas encore commencée.<br>
+    Dans le <a href="#doc_livraisons__show" class="text-underline">détails de la livraison</a>, cliquez sur
+    <button type="button" class="btn btn-sm btn-outline-warning">Modifier</button>
+    .<br>
+    Puis cliquez sur
+    <button type="button" class="btn btn-sm btn-danger">Annuler</button>
+    . Vous serez amenés à remplir le motif d'annulation de la livraison.<br>
+    Une fois annulée, la livraison ne s'effacera pas, elle sera en statut &laquo; Annulée &raquo;.
+</p>
+
+<hr>

@@ -1,0 +1,78 @@
+{% extends is_granted(ROLE_ADMIN) ? 'client/base_client.html.twig' : 'base.html.twig' %}
+
+
+{% block title %}Factures livraisons{% endblock %}
+
+{% block body %}
+    <h2 class="text-center">Factures</h2>
+
+    {{ include('factures/_menu_facture.html.twig') }}
+
+    {% if is_granted(ROLE_ADMIN) %}
+        <a href="{{ path('factures_facture_livraison_new', {client: client.id}) }}" class="btn btn-outline-success pull-right mb-2">Nouvelle facture</a>
+    {% endif %}
+
+    {{ include('factures/facture_livraison/include/_filtre_facture.html.twig') }}
+
+    <div class="table-responsive mt-3">
+        <table class="table table-sm table-hover">
+            <thead>
+            <tr>
+                <th class="{% if facture_livraisons.isSorted('f.numero') %}sorted{% endif %}">
+                    {{ knp_pagination_sortable(facture_livraisons, 'N°', 'f.numero') }}
+                </th>
+                <th class="{% if facture_livraisons.isSorted('f.date') %}sorted{% endif %}">
+                    {{ knp_pagination_sortable(facture_livraisons, 'Date', 'f.date') }}
+                </th>
+                <th class="{% if facture_livraisons.isSorted('ca.nom') %}sorted{% endif %}">
+                    {{ knp_pagination_sortable(facture_livraisons, 'Chargé d\'affaires', 'ca.nom') }}
+                </th>
+                <th class="{% if facture_livraisons.isSorted('f.numeroFactureClient') %}sorted{% endif %}">
+                    {{ knp_pagination_sortable(facture_livraisons, 'Numéro facture client', 'f.numeroFactureClient') }}
+                </th>
+                <th class="text-center">Nombre de livraisons</th>
+                <th class="text-center">Montant</th>
+                <th class="text-center {% if facture_livraisons.isSorted('f.isPaye') %}sorted{% endif %}">
+                    {{ knp_pagination_sortable(facture_livraisons, 'Payée', 'f.isPaye') }}
+                </th>
+                <th class="text-center">PDF</th>
+            </tr>
+            </thead>
+            <tbody>
+            {# @var facture_livraison \App\Entity\Factures\\App\Entity\Factures\FactureLivraison #}
+            {% for facture_livraison in facture_livraisons %}
+                {% set nbLivraison = 0 %}
+                {# @var ligne \App\Entity\Factures\FactureLivraisonLigne #}
+                {% for ligne in facture_livraison.factureLignes %}
+                    {% if ligne.livraisonOrigine %}
+                        {% set nbLivraison = nbLivraison + 1 %}
+                    {% endif %}
+                {% endfor %}
+                <tr class="row-href"
+                        {% if is_granted(ROLE_ADMIN) %}
+                            data-href="{{ path('factures_facture_livraison_show_admin', {id: facture_livraison.id, client: client.id}) }}"
+                        {% else %}
+                            data-href="{{ path('factures_facture_livraison_show', {id: facture_livraison.id}) }}"
+                        {% endif %}
+                >
+                    <td>{{ facture_livraison.numero }}</td>
+                    <td>{{ facture_livraison.date ? facture_livraison.date|date('d/m/Y à H\\hi') : '' }}</td>
+                    <td>{{ facture_livraison.chargeAffaire.nomPrenom }}</td>
+                    <td>{{ facture_livraison.numeroFactureClient }}</td>
+                    <td class="text-center">{{ nbLivraison }}</td>
+                    <th class="text-right white-space-nowrap">{{ facture_livraison.montantTTC|number_format(2, ',', ' ') }} €</th>
+                    <td class="text-center">{{ facture_livraison.isPaye ? '<i class="fas fa-check"></i>' }}</td>
+                    <td class="text-center"><a href="{{ url('factures_facture_livraison_pdf', {id: facture_livraison.id}) }}"><i class="fas fa-file-pdf"></i></a></td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="100%" class="text-center">Aucune facture trouvée</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+
+        {{ knp_pagination_render(facture_livraisons) }}
+    </div>
+
+{% endblock %}

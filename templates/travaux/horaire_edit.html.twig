@@ -1,0 +1,22 @@
+{% extends is_granted(ROLE_ADMIN) ? 'client/base_client.html.twig' : 'base.html.twig' %}
+
+{% block title %}Travaux{% endblock %}
+
+{% block body %}
+    <h2 class="text-center">Modifier un horaire</h2>
+
+    <a href="{{ path('travaux_show', {id: travaux.id, client: client.id}) }}" class="btn btn-secondary">Retour</a>
+
+
+    <div class="col-sm-12 col-md-8 col-lg-6 mx-auto">
+
+        {{ form_start(form) }}
+        {{ form_widget(form) }}
+        {{ form_end(form) }}
+
+        {#        {% if is_granted(ROLE_ADMIN) %}#}
+        {#            {{ include('travaux/include/_delete_form.html.twig') }}#}
+        {#        {% endif %}#}
+    </div>
+
+{% endblock %}

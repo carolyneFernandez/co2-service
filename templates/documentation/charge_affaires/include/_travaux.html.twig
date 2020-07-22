@@ -1,0 +1,70 @@
+<h3 id="doc_travaux" class="mt-5">Travaux</h3>
+
+<p class="pl-3">
+    <a target="_blank" href="{{ url('travaux_index') }}" class="text-underline"><i class="fas fa-link mr-1"></i>Liste des travaux</a>
+    <br>
+    En tant que chargé d'affaires, vous pouvez faire des demandes de travaux. Ces demandes seront traitées par CO2Services.
+</p>
+
+<h4 class="pl-3 mt-4" id="doc_travaux__new">Nouveau travaux</h4>
+<p class="pl-5">
+    Dans la <a class="text-underline" target="_blank" href="{{ url('travaux_index') }}">liste des travaux</a>, cliquez sur
+    <button type="button" class="btn btn-sm btn-outline-success">Nouvelle demande de travaux</button>
+    .<br>
+    Vous arriverez alors sur le formulaire de demande de travaux.<br>
+    <br>
+    Renseignez la date de travaux souhaitée. Le champ &laquo; Référence &raquo; représente votre référence à vous. Le nombre de techniciens et le nombre de jours que vous jugez nécessaire pour ce travaux.<br>
+    Renseignez également l'enseigne où aura lieu le travaux ainsi que l'adresse complète<br>
+    Les choix des départements sont importants. Ce sont eux qui permettront de facturer les travaux. Chaque travaux est facturé en fonction du temps horaire passé sur le travaux par les techniciens.<br>
+    <br>
+    Une fois votre saisie terminée, cliquez sur
+    <button type="button" class="btn btn-primary btn-sm">Enregistrer</button>
+    .<br>
+    CO2Services recevra une notification de demande de travaux par email. Ils définiront une date retenue en fonction des ressources disponibles.<br>
+    <br>
+    Statut du travaux à ce stade : En attente
+</p>
+
+<h4 class="pl-3 mt-4" id="doc_travaux__list">Liste des travaux</h4>
+<p class="pl-5">
+    Dans la <a class="text-underline" target="_blank" href="{{ url('travaux_index') }}">liste des travaux</a>, la liste est triée par date décroissante (les plus anciens en derniers).<br>
+    Cliquez sur les entêtes de tableau pour trier sur d'autre colonne.<br>
+    Vous pouvez filtrer cette liste en cliquant sur le bouton
+    <button class="btn btn-sm btn-outline-primary" type="button">Filtres</button>
+    .<br>
+    Dans la pagination, vous pouvez choisir le nombre de travaux que vous souhaitez afficher par page.
+</p>
+
+<h4 class="pl-3 mt-4" id="doc_travaux__show">Détails du travaux</h4>
+<p class="pl-5">
+    Dans la <a class="text-underline" target="_blank" href="{{ url('travaux_index') }}">liste des travaux</a>, cliquez sur le travaux dont vous voulez voir le détails.<br>
+    Vous avez alors un récapitulatif du travaux (date, adresses, références, statut du travaux).<br>
+    Vous avez également accès en lecture aux fichiers qui ont été importés par CO2Services lors du travaux.<br>
+    Vous aurez aussi un visuel sur les horaires saisit par les techniciens.
+</p>
+
+<h4 class="pl-3 mt-4" id="doc_travaux__edit">Modifier le travaux</h4>
+<p class="pl-5">
+    Vous pouvez modifier un travaux uniquement si le statut du travaux est "En attente, Validée, ou En cours". Cela vous permettra de corriger des informations si nécessaire.<br>
+    Dans le <a href="#doc_travaux__show" class="text-underline">détails du travaux</a>, cliquez sur
+    <button type="button" class="btn btn-sm btn-outline-warning">Modifier</button>
+    .<br>
+    Changez les informations que vous souhaitez puis cliquez sur
+    <button type="button" class="btn btn-sm btn-primary">Enregistrer</button>
+    .<br>
+    Une fois le travaux terminé, vous ne pourrez plus effectuer de modification.
+</p>
+
+<h4 class="pl-3 mt-4" id="doc_travaux__cancel">Annuler le travaux</h4>
+<p class="pl-5">
+    Vous pouvez annuler un travaux tant que ce dernier n'a pas encore commencé.<br>
+    Dans le <a href="#doc_travaux__show" class="text-underline">détails du travaux</a>, cliquez sur
+    <button type="button" class="btn btn-sm btn-outline-warning">Modifier</button>
+    .<br>
+    Puis cliquez sur
+    <button type="button" class="btn btn-sm btn-danger">Annuler</button>
+    . Vous serez amenés à remplir le motif d'annulation du travaux.<br>
+    Une fois annulé, le travaux ne s'effacera pas, il sera en statut &laquo; Annulé &raquo;.
+</p>
+
+<hr>

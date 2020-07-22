@@ -1,0 +1,77 @@
+<div class="table-responsive mt-2">
+    <table class="table table-sm table-hover">
+        <thead>
+        <tr>
+            <th {% if depannages.isSorted('d.id') %} class="sorted"{% endif %}>
+                {{ knp_pagination_sortable(depannages, 'N°', 'd.id') }}
+            </th>
+            {% if is_granted(ROLE_ADMIN) %}
+                <th {% if depannages.isSorted('ca.nom') %} class="sorted"{% endif %}>
+                    {{ knp_pagination_sortable(depannages, 'Chargé d\'affaire', 'ca.nom') }}
+                </th>
+            {% endif %}
+            <th {% if depannages.isSorted('en.nom') %} class="sorted"{% endif %}>
+                {{ knp_pagination_sortable(depannages, 'Enseigne', 'en.nom') }}
+            </th>
+            <th {% if depannages.isSorted('t.ville') %} class="sorted"{% endif %}>
+                {{ knp_pagination_sortable(depannages, 'Ville', 'd.ville') }}
+            </th>
+            <th>
+                Adresse
+            </th>
+            <th {% if depannages.isSorted('d.typeIntervention') %} class="sorted"{% endif %}>
+                {{ knp_pagination_sortable(depannages, 'Type d\'intervention', 'd.typeIntervention') }}
+            </th>
+            <th class="text-center {% if depannages.isSorted('d.dateRetenue') %} sorted{% endif %}">
+                {{ knp_pagination_sortable(depannages, 'Date', 'd.dateRetenue') }}
+            </th>
+            <th class="text-center {% if depannages.isSorted('st.libelle') %} sorted{% endif %}">
+                {{ knp_pagination_sortable(depannages, 'Statut', 'st.libelle') }}
+            </th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for depannage in depannages %}
+            <tr class="row-href"
+                    {% if is_granted(ROLE_CLIENT) %}
+                        data-href="{{ path('depannage_show', {'id': depannage.id }) }}"
+                    {% else %}
+                        data-href="{{ path('depannage_show_admin', {'id': depannage.id, client: depannage.chargeAffaire.client.id }) }}"
+                    {% endif %}
+            >
+                <td>{{ depannage.id }}</td>
+                {% if is_granted(ROLE_ADMIN) %}
+                    <td>{{ depannage.chargeAffaire.nomPrenom }}</td>
+                {% endif %}
+                <td>{{ depannage.enseigne ? depannage.enseigne.nom }}</td>
+                <td>{{ depannage.ville }}</td>
+                <td>{{ depannage.adresse|nl2br }}</td>
+                <td>{{ depannage.typeIntervention }}</td>
+                <td class="text-center">
+                    {% if depannage.dateRetenue == null %}
+                        {{ depannage.dateSouhaitee|date('d/m/Y') }}
+                    {% else %}
+                        {{ depannage.dateRetenue|date('d/m/Y') }}
+                    {% endif %}
+                </td>
+
+                <td>
+                    {% if depannage.statut.id == STATUT_FACTURE and (is_granted(ROLE_ADMIN) or is_granted(ROLE_CLIENT)) %}
+                        {% if is_granted(ROLE_ADMIN) %}
+                            <a data-toggle="tooltip" title="Voir la facture" target="_blank" href="{{ url('factures_facture_depannage_show_admin', {id: depannage.factureDepannageLigne.facture.id, client: client.id}) }}">{{ depannage.statut.libelle|capitalize }}</a>
+                        {% else %}
+                            <a data-toggle="tooltip" title="Voir la facture" target="_blank" href="{{ url('factures_facture_depannage_show', {id: depannage.factureDepannageLigne.facture.id}) }}">{{ depannage.statut.libelle|capitalize }}</a>
+                        {% endif %}
+                    {% else %}
+                        {{ depannage.statut.libelle|capitalize }}
+                    {% endif %}
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="100" class="text-center">Aucune demande de depannage trouvées</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>

@@ -1,0 +1,27 @@
+{% extends 'mail/base_mail.html.twig' %}
+{# @var entretien \App\Entity\Entretien #}
+{% block title %}Fin entretien{% endblock %}
+
+{% block body %}
+    <div>
+        <p>
+            Bonjour,<br>
+            <br>
+            L'entretien n°{{ entretien.id }} est terminé. Merci d'avoir choisi nos services.<br>
+            <br>
+            Contrat d'entretien : {{ entretien.numeroContrat }}<br>
+            Enseigne : {{ entretien.enseigne.nom }}<br>
+            Adresse : {{ entretien.adresse|nl2br }}<br>
+            <br>
+        </p>
+        <div class="text-center mb-2">
+            <a href="{{ url('entretien_show', {id: entretien.id}) }}" class="btn btn-primary">Voir l'entretien</a>
+        </div>
+        <p>
+            <br>
+            Cordialement,<br>
+            <br>
+            CO2Services
+        </p>
+    </div>
+{% endblock %}

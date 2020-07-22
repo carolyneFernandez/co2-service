@@ -1,0 +1,49 @@
+<tr class="row-href"
+        {% if is_granted(ROLE_ADMIN) or is_granted(ROLE_TECHNICIEN) %}
+            {% if activite.type == 'travaux' %}
+                data-href="{{ url('travaux_show', {id: activite.id}) }}"
+            {% elseif activite.type == 'entretien' %}
+                data-href="{{ url('entretien_admin_show', {id: activite.id, client: activite.chargeAffaire.client.id}) }}"
+            {% elseif activite.type == 'dépannage' %}
+                data-href="{{ url('depannage_show_admin', {id: activite.id, client: activite.chargeAffaire.client.id}) }}"
+            {% elseif activite.type == 'livraison' %}
+                data-href="{{ url('livraison_show_admin', {id: activite.id, client: activite.chargeAffaire.client.id}) }}"
+            {% endif %}
+        {% else %}
+            {% if activite.type == 'travaux' %}
+                data-href="{{ url('travaux_show', {id: activite.id}) }}"
+            {% elseif activite.type == 'entretien' %}
+                data-href="{{ url('entretien_show', {id: activite.id}) }}"
+            {% elseif activite.type == 'dépannage' %}
+                data-href="{{ url('depannage_show', {id: activite.id}) }}"
+            {% elseif activite.type == 'livraison' %}
+                data-href="{{ url('livraison_show', {id: activite.id}) }}"
+            {% endif %}
+
+        {% endif %}
+>
+    {#    {% if is_granted(ROLE_ADMIN) or is_granted(ROLE_TECHNICIEN) %}#}
+    <td>{{ activite.id }}</td>
+    {#    {% endif %}#}
+    {% if is_granted(ROLE_ADMIN) %}
+        <td>{{ activite.chargeAffaire.nomPrenom }}</td>
+    {% endif %}
+    <td class="text-center">{{ activite.type|capitalize }}</td>
+    {% if typeDate is defined and typeDate == 'retenue' %}
+        {% if activite.type == 'dépannage' %}
+            <td class="text-center">{{ activite.date ? activite.dateRetenue|date('d/m/Y') }}</td>
+        {% else %}
+            <td class="text-center">{{ activite.date ? activite.dateRetenue|date('d/m/Y \\à H\\hi') }}</td>
+        {% endif %}
+    {% elseif activite.type == 'dépannage' %}
+        <td class="text-center">{{ activite.date ? activite.date|date('d/m/Y') }}</td>
+    {% else %}
+        <td class="text-center">{{ activite.date ? activite.date|date('d/m/Y \\à H\\hi') }}</td>
+    {% endif %}
+
+    <td class="text-center">{{ activite.enseigneOrigine.nom }} - {{ activite.adresse }}</td>
+    {% if dateDemande is defined and dateDemande == 'true' %}
+        <td class="text-center">{{ activite.date ? activite.dateDemande|date('d/m/Y \\à H\\hi') }}</td>
+    {% endif %}
+
+</tr>

@@ -1,0 +1,27 @@
+{% extends 'mail/base_mail.html.twig' %}
+{# @var depannage \App\Entity\Depannage #}
+{% block title %}Fin dépannage{% endblock %}
+
+{% block body %}
+    <div>
+        <p>
+            Bonjour,<br>
+            <br>
+            Le dépannage n°{{ depannage.id }} est terminé. Merci d'avoir choisi nos services.<br>
+            <br>
+            REF : {{ depannage.reference }}<br>
+            Enseigne : {{ depannage.enseigne.nom }}<br>
+            Adresse : {{ depannage.adresse|nl2br }}<br>
+            <br>
+        </p>
+        <div class="text-center mb-2">
+            <a href="{{ url('depannage_show', {id: depannage.id}) }}" class="btn btn-primary">Voir le dépannage</a>
+        </div>
+        <p>
+            <br>
+            Cordialement,<br>
+            <br>
+            CO2Services
+        </p>
+    </div>
+{% endblock %}

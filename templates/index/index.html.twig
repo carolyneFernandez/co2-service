@@ -1,0 +1,405 @@
+{# @var tableauBordService \App\Service\TableauBordService #}
+
+{% extends 'base.html.twig' %}
+
+{% block title %}Tableau de bord{% endblock %}
+
+{% block subNav %}
+    <div class="col-11 mx-auto mt-3">
+
+        <h2 class="text-center">Tableau de bord</h2>
+
+        {% if is_granted(ROLE_ADMIN) or is_granted(ROLE_CLIENT) %}
+        <div class="row">
+
+            <div class="col-12 col-lg-6">
+
+                <h3 class="text-center">Activités</h3>
+
+
+                {% endif %}
+
+                {# Activités en attentes #}
+                {% if is_granted(ROLE_CLIENT) or is_granted(ROLE_ADMIN) %}
+                    {% set activitesEnAttente = tableauBordService.findActiviteByStatut(STATUT_EN_ATTENTE) %}
+                    <div class="accordion" id="accordionActiviteEnAttente" data-show-name="showTabActiviteEnAttente">
+                        <div class="card border-primary mb-3">
+                            <div class="card-header">
+                                <button class="btn btn-link btn-block text-left p-0 d-flex align-items-center justify-content-between" type="button" data-toggle="collapse" data-target="#accordionActiviteEnAttenteCollapse" aria-expanded="true" aria-controls="accordionActiviteTermineCollapse">
+                                    Nouvelles demandes en attente
+                                    <span class="badge badge-primary badge-pill">{{ activitesEnAttente|length }}</span>
+                                </button>
+                            </div>
+                            <div id="accordionActiviteEnAttenteCollapse" class="collapse {{ app.user.showTabActiviteEnAttente ? 'show' }}" aria-labelledby="headingOne" data-parent="#accordionActiviteEnAttente">
+
+                                <div class="card-body table-responsive">
+                                    {#            <h4 class="card-title">Primary card title</h4>#}
+                                    {#            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>#}
+                                    <table class="table table-sm table-hover small">
+                                        {% include 'index/include/_tableau_activite_thead.html.twig' with {typeDate: 'souhaitee', dateDemande: true} %}
+                                        <tbody>
+                                        {% for activite in activitesEnAttente %}
+                                            {% include 'index/include/_tableau_activite_row.html.twig' with {typeDate: 'souhaitee', dateDemande: true} %}
+                                        {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
+
+
+                {# Activités en cours #}
+                {#    {% if is_granted(ROLE_CLIENT) or is_granted(ROLE_ADMIN) %}#}
+                <div class="accordion" id="accordionActiviteEnCours" data-show-name="showTabActiviteEnCours">
+                    {% set activitesEnAttente = tableauBordService.findActiviteByStatut(STATUT_EN_COURS) %}
+                    <div class="card border-success mb-3">
+                        <div class="card-header">
+                            <button class="btn btn-link btn-block text-left p-0 d-flex align-items-center justify-content-between" type="button" data-toggle="collapse" data-target="#accordionActiviteEnCoursCollapse" aria-expanded="true" aria-controls="accordionActiviteTermineCollapse">
+                                Activités en cours
+                                <span class="badge badge-primary badge-pill">{{ activitesEnAttente|length }}</span>
+                            </button>
+                        </div>
+                        <div id="accordionActiviteEnCoursCollapse" class="collapse {{ app.user.showTabActiviteEnCours ? 'show' }}" aria-labelledby="headingOne" data-parent="#accordionActiviteEnCours">
+
+                            <div class="card-body table-responsive">
+                                {#            <h4 class="card-title">Primary card title</h4>#}
+                                {#            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>#}
+                                <table class="table table-sm table-hover small">
+                                    {% include 'index/include/_tableau_activite_thead.html.twig' with {typeDate: 'retenue', dateDemande: false} %}
+                                    <tbody>
+                                    {% for activite in activitesEnAttente %}
+                                        {% include 'index/include/_tableau_activite_row.html.twig' with {typeDate: 'retenue', dateDemande: false} %}
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {#    {% endif %}#}
+
+                {# Activités validés #}
+                {#    {% if is_granted(ROLE_CLIENT) or is_granted(ROLE_ADMIN) %}#}
+                <div class="accordion" id="accordionActiviteAVenir" data-show-name="showTabActiviteValide">
+                    {% set activitesEnAttente = tableauBordService.findActiviteByStatut(STATUT_VALIDE) %}
+                    <div class="card border-info mb-3">
+                        <div class="card-header">
+                            <button class="btn btn-link btn-block text-left p-0 d-flex align-items-center justify-content-between" type="button" data-toggle="collapse" data-target="#accordionActiviteAVenirCollapse" aria-expanded="true" aria-controls="accordionActiviteTermineCollapse">
+                                Activités à venir + 1 semaine
+                                <span class="badge badge-primary badge-pill">{{ activitesEnAttente|length }}</span>
+                            </button>
+                        </div>
+                        <div id="accordionActiviteAVenirCollapse" class="collapse {{ app.user.showTabActiviteValide ? 'show' }}" aria-labelledby="headingOne" data-parent="#accordionActiviteAVenir">
+
+                            <div class="card-body table-responsive">
+                                {#            <h4 class="card-title">Primary card title</h4>#}
+                                {#            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>#}
+                                <table class="table table-sm table-hover small">
+                                    {% include 'index/include/_tableau_activite_thead.html.twig' with {typeDate: 'retenue', dateDemande: false} %}
+                                    <tbody>
+                                    {% for activite in activitesEnAttente %}
+                                        {% include 'index/include/_tableau_activite_row.html.twig' with {typeDate: 'retenue', dateDemande: false} %}
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {#    {% endif %}#}
+
+                {# Activités terminées #}
+                {#    {% if is_granted(ROLE_CLIENT) or is_granted(ROLE_ADMIN) %}#}
+                <div class="accordion" id="accordionActiviteTermine" data-show-name="showTabActiviteTermine">
+                    {% set activitesEnAttente = tableauBordService.findActiviteByStatut(STATUT_TERMINE) %}
+                    <div class="card border-primary mb-3">
+                        <div class="card-header">
+                            <button class="btn btn-link btn-block text-left p-0 d-flex align-items-center justify-content-between" type="button" data-toggle="collapse" data-target="#accordionActiviteTermineCollapse" aria-expanded="true" aria-controls="accordionActiviteTermineCollapse">
+                                Activités terminées - 1 semaine
+                                <span class="badge badge-primary badge-pill">{{ activitesEnAttente|length }}</span>
+
+                            </button>
+                        </div>
+                        <div id="accordionActiviteTermineCollapse" class="collapse {{ app.user.showTabActiviteTermine ? 'show' }}" aria-labelledby="headingOne" data-parent="#accordionActiviteTermine">
+                            <div class="card-body table-responsive">
+                                {#            <h4 class="card-title">Primary card title</h4>#}
+                                {#            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>#}
+                                <table class="table table-sm table-hover small">
+                                    {% include 'index/include/_tableau_activite_thead.html.twig' with {typeDate: 'retenue', dateDemande: false} %}
+                                    <tbody>
+                                    {% for activite in activitesEnAttente %}
+                                        {% include 'index/include/_tableau_activite_row.html.twig' with {typeDate: 'retenue', dateDemande: false} %}
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {#    {% endif %}#}
+
+                {# Activités a facturer #}
+                {% if is_granted(ROLE_ADMIN) or is_granted(ROLE_CLIENT) %}
+                    <div class="accordion" id="accordionActiviteAFacturer" data-show-name="showTabActiviteAFacturer">
+                        {% set activitesEnAttente = tableauBordService.findActiviteByStatut('a facturer') %}
+                        <div class="card border-warning mb-3">
+                            <div class="card-header">
+                                <button class="btn btn-link btn-block text-left p-0 d-flex align-items-center justify-content-between" type="button" data-toggle="collapse" data-target="#accordionActiviteAFacturerCollapse" aria-expanded="true" aria-controls="accordionActiviteAFacturerCollapse">
+                                    Activités à facturer
+                                    <span class="badge badge-primary badge-pill">{{ activitesEnAttente|length }}</span>
+
+                                </button>
+                            </div>
+                            <div id="accordionActiviteAFacturerCollapse" class="collapse {{ app.user.showTabActiviteAFacturer ? 'show' }}" aria-labelledby="headingOne" data-parent="#accordionActiviteAFacturer">
+                                <div class="card-body table-responsive">
+                                    {#            <h4 class="card-title">Primary card title</h4>#}
+                                    {#            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>#}
+                                    <table class="table table-sm table-hover small">
+                                        {% include 'index/include/_tableau_activite_thead.html.twig' with {typeDate: 'retenue', dateDemande: false} %}
+                                        <tbody>
+                                        {% for activite in activitesEnAttente %}
+                                            {% include 'index/include/_tableau_activite_row.html.twig' with {typeDate: 'retenue', dateDemande: false} %}
+                                        {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
+
+
+
+                {#    <div class="card border-success mb-3">#}
+                {#        <div class="card-header">Activités en cours (statut 'en cours')</div>#}
+                {#        <div class="card-body table-responsive">#}
+                {#            #}{#            <h4 class="card-title">Primary card title</h4>#}
+                {#            #}{#            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>#}
+                {#            <table class="table table-sm table-hover small">#}
+                {#                <thead>#}
+                {#                <tr>#}
+                {#                    {% if is_granted(ROLE_ADMIN) %}#}
+                {#                        <th>Client</th>#}
+                {#                    {% endif %}#}
+                {#                    <th>Chargé d'affaire</th>#}
+                {#                    <th class="text-center">Type de demande</th>#}
+                {#                    <th class="text-center">Date retenue</th>#}
+                {#                    <th class="text-center">Enseigne d'origine</th>#}
+                {#                    <th class="text-center">Date de la demande</th>#}
+                {#                </tr>#}
+                {#                </thead>#}
+                {#                <tbody>#}
+                {#                <tr>#}
+                {#                    {% if is_granted(ROLE_ADMIN) %}#}
+                {#                        <td>AMFROID</td>#}
+                {#                    {% endif %}#}
+                {#                    <td>Chargé d'affaire 1</td>#}
+                {#                    <td class="text-center">Livraison</td>#}
+                {#                    <td class="text-center">18/04/2020</td>#}
+                {#                    <td class="text-center">Auchan</td>#}
+                {#                    <td class="text-center">02/04/2020</td>#}
+                {#                </tr>#}
+                {#                <tr>#}
+                {#                    {% if is_granted(ROLE_ADMIN) %}#}
+                {#                        <td>AMFROID</td>#}
+                {#                    {% endif %}#}
+                {#                    <td>Chargé d'affaire 1</td>#}
+                {#                    <td class="text-center">Travaux</td>#}
+                {#                    <td class="text-center">20/04/2020</td>#}
+                {#                    <td class="text-center">LIDL</td>#}
+                {#                    <td class="text-center">06/04/2020</td>#}
+                {#                </tr>#}
+                {#                </tbody>#}
+                {#            </table>#}
+                {#        </div>#}
+                {#    </div>#}
+
+
+
+                {#    <div class="card border-info mb-3">#}
+                {#        <div class="card-header">Activités à venir (statut 'validé') 1 semaine de visu</div>#}
+                {#        <div class="card-body table-responsive">#}
+                {#            #}{#            <h4 class="card-title">Primary card title</h4>#}
+                {#            #}{#            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>#}
+                {#            <table class="table table-sm table-hover small">#}
+                {#                <thead>#}
+                {#                <tr>#}
+                {#                    {% if is_granted(ROLE_ADMIN) %}#}
+                {#                        <th>Client</th>#}
+                {#                    {% endif %}#}
+                {#                    <th>Chargé d'affaire</th>#}
+                {#                    <th class="text-center">Type de demande</th>#}
+                {#                    <th class="text-center">Date retenue</th>#}
+                {#                    <th class="text-center">Enseigne d'origine</th>#}
+                {#                    <th class="text-center">Date de la demande</th>#}
+                {#                </tr>#}
+                {#                </thead>#}
+                {#                <tbody>#}
+                {#                <tr>#}
+                {#                    {% if is_granted(ROLE_ADMIN) %}#}
+                {#                        <td>AMFROID</td>#}
+                {#                    {% endif %}#}
+                {#                    <td>Chargé d'affaire 1</td>#}
+                {#                    <td class="text-center">Livraison</td>#}
+                {#                    <td class="text-center">18/04/2020</td>#}
+                {#                    <td class="text-center">Auchan</td>#}
+                {#                    <td class="text-center">02/04/2020</td>#}
+                {#                </tr>#}
+                {#                <tr>#}
+                {#                    {% if is_granted(ROLE_ADMIN) %}#}
+                {#                        <td>AMFROID</td>#}
+                {#                    {% endif %}#}
+                {#                    <td>Chargé d'affaire 1</td>#}
+                {#                    <td class="text-center">Travaux</td>#}
+                {#                    <td class="text-center">20/04/2020</td>#}
+                {#                    <td class="text-center">LIDL</td>#}
+                {#                    <td class="text-center">06/04/2020</td>#}
+                {#                </tr>#}
+                {#                </tbody>#}
+                {#            </table>#}
+                {#        </div>#}
+                {#    </div>#}
+
+
+
+                {#    <div class="card border-dark mb-3">#}
+                {#        <div class="card-header">Activités terminées (statut 'terminé') 1 semaine passée de visu</div>#}
+                {#        <div class="card-body table-responsive">#}
+                {#            #}{#            <h4 class="card-title">Primary card title</h4>#}
+                {#            #}{#            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>#}
+                {#            <table class="table table-sm table-hover small">#}
+                {#                <thead>#}
+                {#                <tr>#}
+                {#                    {% if is_granted(ROLE_ADMIN) %}#}
+                {#                        <th>Client</th>#}
+                {#                    {% endif %}#}
+                {#                    <th>Chargé d'affaire</th>#}
+                {#                    <th class="text-center">Type de demande</th>#}
+                {#                    <th class="text-center">Date retenue</th>#}
+                {#                    <th class="text-center">Enseigne d'origine</th>#}
+                {#                    <th class="text-center">Date de la demande</th>#}
+                {#                </tr>#}
+                {#                </thead>#}
+                {#                <tbody>#}
+                {#                <tr>#}
+                {#                    {% if is_granted(ROLE_ADMIN) %}#}
+                {#                        <td>AMFROID</td>#}
+                {#                    {% endif %}#}
+                {#                    <td>Chargé d'affaire 1</td>#}
+                {#                    <td class="text-center">Livraison</td>#}
+                {#                    <td class="text-center">18/04/2020</td>#}
+                {#                    <td class="text-center">Auchan</td>#}
+                {#                    <td class="text-center">02/04/2020</td>#}
+                {#                </tr>#}
+                {#                <tr>#}
+                {#                    {% if is_granted(ROLE_ADMIN) %}#}
+                {#                        <td>AMFROID</td>#}
+                {#                    {% endif %}#}
+                {#                    <td>Chargé d'affaire 1</td>#}
+                {#                    <td class="text-center">Travaux</td>#}
+                {#                    <td class="text-center">20/04/2020</td>#}
+                {#                    <td class="text-center">LIDL</td>#}
+                {#                    <td class="text-center">06/04/2020</td>#}
+                {#                </tr>#}
+                {#                </tbody>#}
+                {#            </table>#}
+                {#        </div>#}
+                {#    </div>#}
+
+
+                {#    <table class="table table-sm table-hover">#}
+                {#        <thead>#}
+                {#        <tr>#}
+                {#            <th>Nom</th>#}
+                {#            <th>Prénom</th>#}
+                {#        </tr>#}
+                {#        </thead>#}
+                {#        <tbody>#}
+                {#        <tr class="row-href" data-href="{{ url('app_logout') }}">#}
+                {#            <td>#}
+                {#                Nom 1#}
+                {#            </td>#}
+                {#            <td>#}
+                {#                Prénom 1#}
+                {#            </td>#}
+                {#        </tr>#}
+                {#        <tr>#}
+                {#            <td>#}
+                {#                Nom 2#}
+                {#            </td>#}
+                {#            <td>#}
+                {#                Prénom 2#}
+                {#            </td>#}
+                {#        </tr>#}
+                {#        <tr>#}
+                {#            <td>#}
+                {#                Nom 3#}
+                {#            </td>#}
+                {#            <td>#}
+                {#                Prénom 3#}
+                {#            </td>#}
+                {#        </tr>#}
+                {#        </tbody>#}
+                {#    </table>#}
+
+                {% if is_granted(ROLE_ADMIN) or is_granted(ROLE_CLIENT) %}
+            </div>
+            <div class="col-12 col-lg-6">
+                <h3 class="text-center">Factures</h3>
+
+                <div class="accordion" id="accordionFacturesImpayee" data-show-name="showTabFactureImpayee">
+                    {% set factureImpayee = tableauBordService.factureImpayee %}
+                    <div class="card border-danger mb-3">
+                        <div class="card-header">
+                            <button class="btn btn-link btn-block text-left p-0 d-flex align-items-center justify-content-between" type="button" data-toggle="collapse" data-target="#accordionFacturesImpayeeCollapse" aria-expanded="true" aria-controls="accordionFacturesImpayeeCollapse">
+                                Factures impayées
+                                <span class="badge badge-primary badge-pill">{{ factureImpayee|length }}</span>
+                            </button>
+                        </div>
+                        <div id="accordionFacturesImpayeeCollapse" class="collapse {{ app.user.showTabFactureImpayee ? 'show' }}" aria-labelledby="headingOne" data-parent="#accordionFacturesImpayee">
+                            <div class="card-body table-responsive">
+                                {#            <h4 class="card-title">Primary card title</h4>#}
+                                {#            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>#}
+                                <table class="table table-sm table-hover small">
+                                    <thead>
+                                    <tr>
+                                        <th>N°</th>
+                                        {% if is_granted(ROLE_ADMIN) %}
+                                            <th>Chargé d'affaire</th>
+                                        {% endif %}
+                                        <th class="text-center">Type de facture</th>
+                                        <th class="text-center">Date</th>
+                                        <th class="text-center">Montant</th>
+                                        <th class="text-center">Reste dû</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% for facture in factureImpayee %}
+                                        {% include 'index/include/_tableau_facture_row.html.twig' %}
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+
+            {% endif %}
+
+
+
+
+            {% if is_granted(ROLE_ADMIN) or is_granted(ROLE_CLIENT) %}
+        </div>
+        {% endif %}
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ encore_entry_script_tags('js/component/tableau_bord') }}
+{% endblock %}

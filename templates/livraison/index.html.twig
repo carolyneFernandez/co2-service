@@ -1,0 +1,111 @@
+{% extends is_granted(ROLE_ADMIN) ? 'client/base_client.html.twig' : 'base.html.twig' %}
+
+{% block title %}Livraisons{% endblock %}
+
+{% block body %}
+    <h2 class="text-center">Livraisons</h2>
+
+    {% if is_granted(ROLE_CLIENT) %}
+        <a href="{{ path('livraison_new') }}" class="btn btn-outline-success pull-right mb-2">Nouvelle livraison</a>
+    {% elseif is_granted(ROLE_ADMIN) %}
+        <a href="{{ path('livraison_new_admin', {client: client.id}) }}" class="btn btn-outline-success pull-right mb-2">Nouvelle livraison</a>
+    {% endif %}
+
+    {% include 'livraison/include/_filtres.html.twig' %}
+
+    <table class="table table-sm table-hover table-responsive-md mt-3">
+        <thead>
+        <tr>
+            <th {% if livraisons.isSorted('l.id') %} class="sorted"{% endif %}>
+                {{ knp_pagination_sortable(livraisons, 'N°', 'l.id') }}
+            </th>
+
+            {% if is_granted(ROLE_ADMIN) %}
+                <th {% if livraisons.isSorted('ca.nom') %} class="sorted"{% endif %}>
+                    {{ knp_pagination_sortable(livraisons, 'Chargé d\'affaire', 'ca.nom') }}
+                </th>
+            {% elseif is_granted(ROLE_TECHNICIEN) %}
+                <th>Client</th>
+            {% endif %}
+
+            <th {% if livraisons.isSorted('l.dateRetenue') %} class="sorted"{% endif %}>
+                {{ knp_pagination_sortable(livraisons, 'Date/heure', 'l.dateRetenue') }}
+            </th>
+            <th {% if livraisons.isSorted('enD.nom') %} class="sorted"{% endif %}>
+                {{ knp_pagination_sortable(livraisons, 'Enseigne origine', 'enD.nom') }}
+            </th>
+            <th {% if livraisons.isSorted('villeD.nom') %} class="sorted"{% endif %}>
+                {{ knp_pagination_sortable(livraisons, 'Département de départ', 'villeD.nom') }}
+            </th>
+            <th {% if livraisons.isSorted('enA.nom') %} class="sorted"{% endif %}>
+                {{ knp_pagination_sortable(livraisons, 'Enseigne destination', 'enA.nom') }}
+            </th>
+            <th {% if livraisons.isSorted('villeA.nom') %} class="sorted"{% endif %}>
+                {{ knp_pagination_sortable(livraisons, 'Ville d\'arrivée', 'villeA.nom') }}
+            </th>
+            <th {% if livraisons.isSorted('st.libelle') %} class="sorted"{% endif %}>
+                {{ knp_pagination_sortable(livraisons, 'Statut', 'st.libelle') }}
+            </th>
+
+        </tr>
+        </thead>
+        <tbody>
+        {% for livraison in livraisons %}
+            <tr class="row-href" {% if is_granted(ROLE_CLIENT) %} data-href="{{ path('livraison_show', {'id': livraison.id}) }}"
+            {% else %}
+                data-href="{{ path('livraison_show_admin', {'id': livraison.id, 'client': client is defined ? client.id : livraison.chargeAffaire.client.id }) }}"
+                    {% endif %}>
+                <td>{{ livraison.id }}</td>
+
+                {% if is_granted(ROLE_ADMIN) %}
+                    <td>{{ livraison.chargeAffaire.nom ~ ' ' ~ livraison.chargeAffaire.prenom }}</td>
+                {% elseif is_granted(ROLE_TECHNICIEN) %}
+                    <td>{{ livraison.chargeAffaire.client.nom }}</td>
+                {% endif %}
+
+                <td>
+                    <time>{{ livraison.dateRetenue ? livraison.dateRetenue|date('d/m/Y à H\\hi') : '' }}</time>
+                </td>
+                <td>{{ livraison.enseigneDepart.nom }}</td>
+                <td>{{ livraison.villeDepart.nom }}</td>
+                <td>{{ livraison.enseigneArrivee.nom }}</td>
+                <td>{{ livraison.villeArrivee.nom }}</td>
+                {#                <td class="col-4">#}
+                {#                {% for technicien in livraison.techniciens %}#}
+                {#                    {{ technicien.getNom() }}{{ loop.last == false ? ', ' }}#}
+
+                {#                {% endfor %}#}
+                {#                </td>#}
+                <td>
+                    {% if livraison.statut.id == STATUT_FACTURE and (is_granted(ROLE_ADMIN) or is_granted(ROLE_CLIENT)) %}
+                        {% if is_granted(ROLE_ADMIN) %}
+                            <a data-toggle="tooltip" title="Voir la facture" target="_blank" href="{{ url('factures_facture_livraison_show_admin', {id: livraison.factureLivraisonLigne.facture.id, client: client.id}) }}">{{ livraison.statut.libelle|capitalize }}</a>
+                        {% else %}
+                            <a data-toggle="tooltip" title="Voir la facture" target="_blank" href="{{ url('factures_facture_livraison_show', {id: livraison.factureLivraisonLigne.facture.id}) }}">{{ livraison.statut.libelle|capitalize }}</a>
+                        {% endif %}
+                    {% else %}
+                        {{ livraison.statut.libelle|capitalize }}
+                    {% endif %}
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td class="text-center" colspan="11">Aucune livraison trouvée</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    {% if is_granted(ROLE_TECHNICIEN) %}
+        <div class="text-center mt-3">
+            {% if app.request.query.get('old') %}
+                <a href="{{ url('livraison_index') }}" class="btn btn-sm btn-outline-primary mb-2">Afficher celles à venir</a>
+            {% else %}
+                <a href="{{ url('livraison_index', {'old': true}) }}" class="btn btn-sm btn-outline-primary mb-2">Afficher les anciennes</a>
+            {% endif %}
+        </div>
+    {% endif %}
+
+
+    {{ knp_pagination_render(livraisons) }}
+{% endblock %}

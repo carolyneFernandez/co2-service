@@ -1,0 +1,78 @@
+{% extends is_granted(ROLE_ADMIN) ? 'client/base_client.html.twig' : 'base.html.twig' %}
+
+
+{% block title %}Factures rappel_bouteilles{% endblock %}
+
+{% block body %}
+    <h2 class="text-center">Factures</h2>
+
+    {{ include('factures/_menu_facture.html.twig') }}
+
+    {% if is_granted(ROLE_ADMIN) %}
+        <a href="{{ path('factures_facture_rappel_bouteille_new', {client: client.id}) }}" class="btn btn-outline-success pull-right mb-2">Nouvelle facture</a>
+    {% endif %}
+
+    {{ include('factures/facture_rappel_bouteille/include/_filtre_facture.html.twig') }}
+
+    <div class="table-responsive mt-3">
+        <table class="table table-sm table-hover">
+            <thead>
+            <tr>
+                <th class="{% if facture_rappel_bouteilles.isSorted('f.numero') %}sorted{% endif %}">
+                    {{ knp_pagination_sortable(facture_rappel_bouteilles, 'N°', 'f.numero') }}
+                </th>
+                <th class="{% if facture_rappel_bouteilles.isSorted('f.date') %}sorted{% endif %}">
+                    {{ knp_pagination_sortable(facture_rappel_bouteilles, 'Date', 'f.date') }}
+                </th>
+                <th class="{% if facture_rappel_bouteilles.isSorted('ca.nom') %}sorted{% endif %}">
+                    {{ knp_pagination_sortable(facture_rappel_bouteilles, 'Chargé d\'affaires', 'ca.nom') }}
+                </th>
+                <th class="{% if facture_rappel_bouteilles.isSorted('f.numeroFactureClient') %}sorted{% endif %}">
+                    {{ knp_pagination_sortable(facture_rappel_bouteilles, 'Numéro facture client', 'f.numeroFactureClient') }}
+                </th>
+                <th class="text-center">Nombre de bouteilles</th>
+                <th class="text-center">Montant</th>
+                <th class="text-center {% if facture_rappel_bouteilles.isSorted('f.isPaye') %}sorted{% endif %}">
+                    {{ knp_pagination_sortable(facture_rappel_bouteilles, 'Payée', 'f.isPaye') }}
+                </th>
+                <th class="text-center">PDF</th>
+            </tr>
+            </thead>
+            <tbody>
+            {# @var facture_rappel_bouteille \App\Entity\Factures\\App\Entity\Factures\Facturerappel_bouteille #}
+            {% for facture_rappel_bouteille in facture_rappel_bouteilles %}
+                {% set nbrappel_bouteille = 0 %}
+                {# @var ligne \App\Entity\Factures\\App\Entity\Factures\FactureRappelBouteilleLigne #}
+                {% for ligne in facture_rappel_bouteille.factureLignes %}
+                    {% if ligne.rappelBouteilleOrigine %}
+                        {% set nbrappel_bouteille = nbrappel_bouteille + 1 %}
+                    {% endif %}
+                {% endfor %}
+                <tr class="row-href"
+                        {% if is_granted(ROLE_ADMIN) %}
+                            data-href="{{ path('factures_facture_rappel_bouteille_show_admin', {id: facture_rappel_bouteille.id, client: client.id}) }}"
+                        {% else %}
+                            data-href="{{ path('factures_facture_rappel_bouteille_show', {id: facture_rappel_bouteille.id}) }}"
+                        {% endif %}
+                >
+                    <td>{{ facture_rappel_bouteille.numero }}</td>
+                    <td>{{ facture_rappel_bouteille.date ? facture_rappel_bouteille.date|date('d/m/Y à H\\hi') : '' }}</td>
+                    <td>{{ facture_rappel_bouteille.chargeAffaire.nomPrenom }}</td>
+                    <td>{{ facture_rappel_bouteille.numeroFactureClient }}</td>
+                    <td class="text-center">{{ nbrappel_bouteille }}</td>
+                    <th class="text-right white-space-nowrap">{{ facture_rappel_bouteille.montantTTC|number_format(2, ',', ' ') }} €</th>
+                    <td class="text-center">{{ facture_rappel_bouteille.isPaye ? '<i class="fas fa-check"></i>' }}</td>
+                    <td class="text-center"><a href="{{ url('factures_facture_rappel_bouteille_pdf', {id: facture_rappel_bouteille.id}) }}"><i class="fas fa-file-pdf"></i></a></td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="100%" class="text-center">Aucune facture trouvée</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+
+        {{ knp_pagination_render(facture_rappel_bouteilles) }}
+    </div>
+
+{% endblock %}

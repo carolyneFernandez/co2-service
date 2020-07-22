@@ -1,0 +1,19 @@
+{% extends is_granted(ROLE_ADMIN) ? 'client/base_client.html.twig' : 'base.html.twig' %}
+
+{% block title %}Nouveau bon d'intervention{% endblock %}
+
+{% block body %}
+    <h2 class="text-center">Bon d'intervention du depannage n°{{ depannage.id }}</h2>
+
+    <a href="{{ url('depannage_show_admin', {id: depannage.id, client: depannage.chargeAffaire.client.id}) }}" class="btn btn-secondary">Retour</a>
+
+    <div class="col-sm-12  mx-auto">
+
+        {{ include('depannage_bon_intervention/include/_form.html.twig') }}
+    </div>
+    <div class="clearfix"></div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ encore_entry_script_tags('js/component/entretien/bon_entretien_form') }}
+{% endblock %}
